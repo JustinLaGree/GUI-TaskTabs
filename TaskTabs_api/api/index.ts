@@ -4,15 +4,17 @@ import express from "express";
 import mongoose from "mongoose";
 import * as bodyParser from "body-parser";
 import { routeTaskApis } from "./routes/taskRoutes";
+import { ApplicationConfig } from "./ApplicationConfig";
 
 // set up the express application
 const app: express.Application = express();
-const port: number = 1337;
+const port: number = ApplicationConfig.api.port;
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost:27017/TaskTabsDBMS-Test', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb://${ApplicationConfig.database.hostname}:${ApplicationConfig.database.port}/${ApplicationConfig.database.name}`,
+    { useNewUrlParser: true, useUnifiedTopology: true });
 
 // middleware setup to allow for json routing
 app.use(bodyParser.urlencoded({ extended: true }));
