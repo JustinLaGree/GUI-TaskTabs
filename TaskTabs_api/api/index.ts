@@ -1,14 +1,25 @@
+'use strict';
+
 import express from "express";
 import mongoose from "mongoose";
-import { routes } from "./routes/taskRoutes";
+import * as bodyParser from "body-parser";
+import { routeTaskApis } from "./routes/taskRoutes";
 
+// set up the express application
 const app: express.Application = express();
-const port: Number = 1337;
+const port: number = 1337;
 
-app.get('/', (req, res) => res.send('Hello World!'))
-
+// connect to our local mongo db
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Taskbdasdasd');
+mongoose.set('useCreateIndex', true);
+mongoose.connect('mongodb://localhost:27017/TaskTabsDBMS-Test', { useNewUrlParser: true, useUnifiedTopology: true });
 
-routes(app);
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// middleware setup to allow for json routing
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// route the /api/Tasks endpoint
+routeTaskApis(app);
+
+// listen on the configured port
+app.listen(port);

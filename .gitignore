@@ -1,4 +1,5 @@
 /node_modules
-/TaskTabs_api/node_modules
 /dist
-/.vscode
+/TaskTabs_api/node_modules
+/TaskTabs_api/dist
+/.vscode/settings.json

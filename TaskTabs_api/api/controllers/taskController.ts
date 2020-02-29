@@ -1,15 +1,16 @@
 'use strict';
 
-//import mongoose and express
+// import mongoose and express
 import express from "express";
-import mongoose, { MongooseDocument } from "mongoose";
+import { Task } from "../models/taskModel"
+import { TaskObj } from "../testData/taskObj";
 
-var Tasks: mongoose.Model<mongoose.Document, {}> = mongoose.model("Tasks");
-
+// export controller for use in the routes generation
 export class TaskController {
 
-    static list_all_tasks(req: express.Request, res: express.Response) {
-        Tasks.find({}, function(err, task) {
+    // list all of the tasks in the db
+    static list_all_tasks(_req: express.Request, res: express.Response) {
+        Task.find({}, "-_id", (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -17,8 +18,9 @@ export class TaskController {
       });
     }
 
+    // get a specific task in the db by passing an id
     static get_a_task(req: express.Request, res: express.Response) {
-        Tasks.findById(req.params.taskId, function(err, task) {
+        Task.find({ "id": req.params.taskId }, "-_id", (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -26,9 +28,10 @@ export class TaskController {
         });
     }
 
+    // create a new task in the db
     static create_a_task(req: express.Request, res: express.Response) {
-        var newTask = new Tasks(req.body);
-        newTask.save(function(err, task) {
+        const newTask = new Task(req.body);
+        newTask.save((err, task) => {
             if (err){
                 res.send(err);
             }
@@ -36,8 +39,13 @@ export class TaskController {
         });
     }
 
+    // update a specific task in the db by passing an id ... all other info expected in the body
+    // uses body of x-www-form-urlencoded type
     static update_a_task(req: express.Request, res: express.Response) {
-        Tasks.findByIdAndUpdate(req.params.taskId, req.body, function(err, task) {
+        const update: TaskObj = req.body;
+        update.id = parseInt(req.params.taskId, 10);
+
+        Task.findOneAndUpdate({ "id": req.params.taskId }, update, (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -45,12 +53,18 @@ export class TaskController {
         });
     }
 
+    // delete a specific task in the db by passing an id
     static delete_a_task(req: express.Request, res: express.Response) {
-        Tasks.findByIdAndDelete(req.params.taskId, function(err, task) {
+        Task.findOneAndDelete({"id": req.params.taskId}, (err, task) => {
             if (err){
                 res.send(err);
+                return;
             }
-            res.json({ message: `Task ${req.params.taskId} successfully deleted`});
+            else if (task) {
+                res.json({ message: `Task ${req.params.taskId} successfully deleted`});
+                return;
+            }
+            res.json({ message: `Task ${req.params.taskId} could not be found`})
         });
     }
 }
