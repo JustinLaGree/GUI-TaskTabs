@@ -12,9 +12,7 @@ const ButtonText = styled.div`
     font-size: 16px;
 `;
 
-export interface ProjButtonProps {  };
-
-export class ProjectButton extends React.Component<ProjButtonProps, {}>{
+export class ProjectButton extends React.Component<{}>{
 
     render() {
         return (

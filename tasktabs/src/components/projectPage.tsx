@@ -19,12 +19,9 @@ const Column = styled.div`
   margin: 8px;
 `;
 
-export interface ProjectProps {  };
-
-export class ProjectPage extends React.Component<ProjectProps, {}>{
+export class ProjectPage extends React.Component<{}>{
 
     render() {
-        console.log(window.innerHeight);
         return (
           <BlueSideBar>
             <Column>
