@@ -4,7 +4,7 @@ import { Counter } from "../models/counterModel"
 import { CounterObj } from "./counterObj"
 import mongoose from "mongoose";
 
-//class to reconstruct counter table test data
+// class to reconstruct counter table test data
 export class CounterTestData {
 
     // list of inserts to be saved into the db

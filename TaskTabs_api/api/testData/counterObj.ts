@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";
 
-//interface for object that matches our counter schema
+// interface for object that matches our counter schema
 export interface ICounterObj{
     _id: string;
     sequenceValue: number

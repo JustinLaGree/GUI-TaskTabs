@@ -4,7 +4,7 @@ import { Task } from "../models/taskModel"
 import { TaskObj } from "./taskObj"
 import mongoose from "mongoose";
 
-//class to reconstruct task table test data
+// class to reconstruct task table test data
 export class TaskTestData {
 
     // list of inserts to be saved into the db

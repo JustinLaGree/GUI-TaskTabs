@@ -30,9 +30,9 @@ export class TaskController {
     }
 
     // create a new task in the db... also get the current id from the counter sequence
-    //update the task sequence counter to the new value (+1)
-    //TODO: JAL- An improvement would be a mapping from a logical value to the numeric id for the _id
-    //cont... Ex: taskSequence maps to _id of 1
+    // update the task sequence counter to the new value (+1)
+    // TODO: JAL- An improvement would be a mapping from a logical value to the numeric id for the _id
+    // cont... Ex: taskSequence maps to _id of 1
     static create_a_task(req: express.Request, res: express.Response) {
         const newTask = new Task(req.body);
 
