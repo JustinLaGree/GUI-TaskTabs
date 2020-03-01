@@ -4,11 +4,7 @@ import mongoose from "mongoose";// using the mongoose library (js/mongodb integr
 
 // Our MongoDB schema for the Task table
 const TaskSchema: mongoose.Schema = new mongoose.Schema({
-    id: {
-        type: Number,
-        index: true,
-        required: "An id must be specified for a task"
-    },
+    _id: String,
     title: {
         type: String,
         required: "A title must be specified",

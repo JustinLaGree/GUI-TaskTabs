@@ -2,6 +2,7 @@
 
 import mongoose from "mongoose";
 import { TaskTestData } from "./testData/taskTestData";
+import { CounterTestData } from "./testData/counterTestData";
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
@@ -10,3 +11,4 @@ mongoose.connect('mongodb://localhost:27017/TaskTabsDBMS-Test', { useNewUrlParse
 
 // reconstruct the test data for the Tasks table
 TaskTestData.ConstructTestData();
+CounterTestData.ConstructTestData();

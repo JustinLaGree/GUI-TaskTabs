@@ -3,14 +3,15 @@
 // import mongoose and express
 import express from "express";
 import { Task } from "../models/taskModel"
-import { TaskObj } from "../testData/taskObj";
+import { Counter } from "../models/counterModel"
+import { CounterController } from "./counterController";
 
 // export controller for use in the routes generation
 export class TaskController {
 
     // list all of the tasks in the db
     static list_all_tasks(_req: express.Request, res: express.Response) {
-        Task.find({}, "-_id", (err, task) => {
+        Task.find({}, (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -20,7 +21,7 @@ export class TaskController {
 
     // get a specific task in the db by passing an id
     static get_a_task(req: express.Request, res: express.Response) {
-        Task.find({ "id": req.params.taskId }, "-_id", (err, task) => {
+        Task.findById(req.params.taskId, (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -28,24 +29,35 @@ export class TaskController {
         });
     }
 
-    // create a new task in the db
+    // create a new task in the db... also get the current id from the counter sequence
+    //update the task sequence counter to the new value (+1)
+    //TODO: JAL- An improvement would be a mapping from a logical value to the numeric id for the _id
+    //cont... Ex: taskSequence maps to _id of 1
     static create_a_task(req: express.Request, res: express.Response) {
         const newTask = new Task(req.body);
-        newTask.save((err, task) => {
-            if (err){
-                res.send(err);
-            }
-            res.json(task);
+
+        CounterController.get_a_counter("1").then(value => {
+            const counter: number = new Counter(value).get("sequenceValue");
+            newTask._id = counter;
+
+            newTask.save((err, task) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+                res.json(task);
+            });
+
+            CounterController.update_a_counter("1", { sequenceValue: counter + 1 });
         });
     }
 
     // update a specific task in the db by passing an id ... all other info expected in the body
     // uses body of x-www-form-urlencoded type
     static update_a_task(req: express.Request, res: express.Response) {
-        const update: TaskObj = req.body;
-        update.id = parseInt(req.params.taskId, 10);
+        const update = new Task(req.body);
 
-        Task.findOneAndUpdate({ "id": req.params.taskId }, update, (err, task) => {
+        Task.findByIdAndUpdate(req.params.taskId, update, (err, task) => {
             if (err){
                 res.send(err);
             }
@@ -55,7 +67,7 @@ export class TaskController {
 
     // delete a specific task in the db by passing an id
     static delete_a_task(req: express.Request, res: express.Response) {
-        Task.findOneAndDelete({"id": req.params.taskId}, (err, task) => {
+        Task.findByIdAndDelete(req.params.taskId, (err, task) => {
             if (err){
                 res.send(err);
                 return;
