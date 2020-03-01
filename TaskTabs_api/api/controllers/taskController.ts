@@ -4,7 +4,9 @@
 import express from "express";
 import { Task } from "../models/taskModel"
 import { Counter } from "../models/counterModel"
-import { CounterController } from "./counterController";
+import { CounterController, CounterMapping } from "./counterController";
+import { Project } from "../models/projectModel";
+import { ProjectController } from "./projectController";
 
 // export controller for use in the routes generation
 export class TaskController {
@@ -29,14 +31,22 @@ export class TaskController {
         });
     }
 
+    // create a task
+    static create_a_task(req: express.Request, res: express.Response){
+        TaskController.create_a_task_project(req, res);
+    }
+
+    // create a task that is also a project
+    static create_a_project(req: express.Request, res: express.Response){
+        TaskController.create_a_task_project(req, res, true);
+    }
+
     // create a new task in the db... also get the current id from the counter sequence
     // update the task sequence counter to the new value (+1)
-    // TODO: JAL- An improvement would be a mapping from a logical value to the numeric id for the _id
-    // cont... Ex: taskSequence maps to _id of 1
-    static create_a_task(req: express.Request, res: express.Response) {
+    private static create_a_task_project(req: express.Request, res: express.Response, isProject = false) {
         const newTask = new Task(req.body);
 
-        CounterController.get_a_counter("1").then(value => {
+        CounterController.get_a_counter(CounterMapping.taskSequence).then(value => {
             const counter: number = new Counter(value).get("sequenceValue");
             newTask._id = counter;
 
@@ -46,9 +56,15 @@ export class TaskController {
                     return;
                 }
                 res.json(task);
-            });
 
-            CounterController.update_a_counter("1", { sequenceValue: counter + 1 });
+                if (task){
+
+                    CounterController.update_a_counter(CounterMapping.taskSequence, { sequenceValue: counter + 1 });
+                    if (isProject){
+                        ProjectController.create_a_project(task, res);
+                    }
+                }
+            });
         });
     }
 
@@ -65,8 +81,15 @@ export class TaskController {
         });
     }
 
-    // delete a specific task in the db by passing an id
+    // delete a specific task/project in the db by passing an id
     static delete_a_task(req: express.Request, res: express.Response) {
+        Project.findByIdAndDelete(req.params.taskId, (err, _project) => {
+            if (err){
+                res.send(err);
+                return;
+            }
+        });
+
         Task.findByIdAndDelete(req.params.taskId, (err, task) => {
             if (err){
                 res.send(err);
@@ -76,7 +99,8 @@ export class TaskController {
                 res.json({ message: `Task ${req.params.taskId} successfully deleted`});
                 return;
             }
-            res.json({ message: `Task ${req.params.taskId} could not be found`})
         });
+
+
     }
 }

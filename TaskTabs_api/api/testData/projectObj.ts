@@ -1,20 +1,16 @@
 'use strict';
 
 // interface for object that matches our counter schema
-export interface ICounterObj{
+export interface IProjectObj{
     _id: string;
-    sequenceValue: number
 }
 
 // object that matches our counter schema ... for use in creating test data
-export class CounterObj implements ICounterObj{
+export class ProjectObj implements IProjectObj{
     _id: string;
-    sequenceValue: number
 
     // construct a CounterModel base data class for insertion
-    constructor(idParam: string,
-        sequenceValueParam: number) {
+    constructor(idParam: string) {
             this._id = idParam;
-            this.sequenceValue = sequenceValueParam;
     }
 }

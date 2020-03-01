@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\TaskTabs_api\\dist\\index.js",
+            "program": "${workspaceFolder}\\dist\\index.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -23,7 +23,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\TaskTabs_api\\dist\\reconstructDB.js",
+            "program": "${workspaceFolder}\\dist\\reconstructDB.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

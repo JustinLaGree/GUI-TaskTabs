@@ -26,3 +26,8 @@ export class CounterController {
         });
     }
 }
+
+// Dictionary for the logical name to Identifier in db
+export const CounterMapping = {
+    "taskSequence": "1"
+}
