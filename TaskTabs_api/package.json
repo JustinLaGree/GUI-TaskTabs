@@ -8,8 +8,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",
-    "reconstructDB": "node dist/reconstructDB.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "reconstructDB": "node dist/reconstructDB.js"
   },
   "author": "",
   "license": "ISC",
