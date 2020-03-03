@@ -9,7 +9,7 @@ export function routeTaskApis(app: express.Application) {
   // task routes that do not require a task id to query
   app.route('/api/tasks')
     .get(TaskController.list_all_tasks)
-    .post(TaskController.create_a_task);
+    .post(TaskController.create_a_task_without_project);
 
   // task routes that require a task id to query
   app.route('/api/tasks/:taskId')

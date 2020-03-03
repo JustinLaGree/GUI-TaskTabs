@@ -1,7 +1,5 @@
 'use strict';
 
-import mongoose from "mongoose"
-
 // interface for object that matches our Task schema
 export interface ITaskObj{
     _id: string;

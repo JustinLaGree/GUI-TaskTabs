@@ -12,7 +12,7 @@ export class CounterTestData {
         new CounterObj("1", 5)
     ];
 
-    // clear the tasks table and re-generate test data
+    // clear the counter table and re-generate test data
     static ConstructTestData(){
         mongoose.connection.collections.counters.deleteMany({ });
 

@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";// using the mongoose library (js/mongodb integration) to create the json schemas
 
-// Our MongoDB schema for the Task table
+// Our MongoDB schema for the counter table
 const CounterSchema: mongoose.Schema = new mongoose.Schema({
     _id: String,
     sequenceValue: {
