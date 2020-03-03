@@ -31,19 +31,21 @@ export class TaskController {
         });
     }
 
-    // create a task
-    static create_a_task(req: express.Request, res: express.Response){
-        TaskController.create_a_task_project(req, res);
+    // create a task without creating a corresponding project in the db
+    static create_a_task_without_project(req: express.Request, res: express.Response){
+        TaskController.create_a_task(req, res);
     }
 
-    // create a task that is also a project
-    static create_a_project(req: express.Request, res: express.Response){
-        TaskController.create_a_task_project(req, res, true);
+    // create a task as well as a corresponding project in the db
+    static create_a_task_project(req: express.Request, res: express.Response){
+        TaskController.create_a_task(req, res, /*isProject:*/ true);
     }
 
     // create a new task in the db... also get the current id from the counter sequence
     // update the task sequence counter to the new value (+1)
-    private static create_a_task_project(req: express.Request, res: express.Response, isProject = false) {
+    // depending on which endpoint is triggered to do a create (Task/Project)...
+    // only create a task or create a task and a project in the db
+    private static create_a_task(req: express.Request, res: express.Response, isProject = false) {
         const newTask = new Task(req.body);
 
         CounterController.get_a_counter(CounterMapping.taskSequence).then(value => {
@@ -83,7 +85,7 @@ export class TaskController {
 
     // delete a specific task/project in the db by passing an id
     static delete_a_task(req: express.Request, res: express.Response) {
-        Project.findByIdAndDelete(req.params.taskId, (err, _project) => {
+        Project.findByIdAndDelete(req.params.taskId, (err) => {
             if (err){
                 res.send(err);
                 return;

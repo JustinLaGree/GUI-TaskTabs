@@ -10,5 +10,5 @@ export function routeProjectApis(app: express.Application) {
   // project routes that do not require a task/project id to query
   app.route('/api/projects')
     .get(ProjectController.list_all_projects)
-    .post(TaskController.create_a_project);
+    .post(TaskController.create_a_task_project);
 };

@@ -3,7 +3,6 @@
 // import mongoose and express
 import express from "express";
 import { Project } from "../models/projectModel";
-import { TaskController } from "./taskController";
 
 // export controller for use in the routes generation
 export class ProjectController {
@@ -25,7 +24,7 @@ export class ProjectController {
         newProject._id = body._id;
 
         if (newProject._id){
-            newProject.save((err, project) => {
+            newProject.save((err) => {
                 if (err){
                     res.send(err);
                     return;
