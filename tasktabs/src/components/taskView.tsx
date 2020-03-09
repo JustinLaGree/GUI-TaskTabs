@@ -26,6 +26,8 @@ const SaveButtonText = styled.div`
     margin: 30px;
 `;
 
+// The delete button is absolutely positioned to the right because the length of the
+// title could influence the button's position.
 const DeleteButton = styled.button`
     width: 177px;
     height: 40px;
@@ -49,6 +51,7 @@ interface TaskViewProps {
     description: string;
 };
 
+// TaskView is intended to be the center view for all tasks, substasks and project heads.
 export class TaskView extends React.Component<TaskViewProps>{
     name: string;
     displayedName: string;
@@ -60,6 +63,7 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.displayedName = this.name;
     }
 
+    // If the title is too long, we should shorten it to fit the space we have.
     checkNameLength = () => {
         if (this.name.length > 16) {
             this.displayedName = this.name.substring(0, 15);

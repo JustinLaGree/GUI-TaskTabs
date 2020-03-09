@@ -35,11 +35,14 @@ interface ProgressBarProps {
     percentage: number;
 };
 
+// ProgressBar takes in the percentage completion as a number and renders the
+// progressbar. 
 export class TaskProgressBar extends React.Component<ProgressBarProps> {
     constructor(props: ProgressBarProps) {
         super(props);
     }
 
+    // Currently hardcoded colors, number ranges are up to debate.
     determineColor = () => {
         const percentage = this.props.percentage;
         let color = 'green';

@@ -25,6 +25,8 @@ const Container = styled.div`
   flex-direction: row;
 `;
 
+// ProjectPage contains the entire application past the Google oauth. This should include the left and right sidebars
+// task view, settings user info, etc.
 export class ProjectPage extends React.Component<{}>{
 
   render() {
