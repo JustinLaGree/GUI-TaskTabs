@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { TaskProgressBar } from './progressBar';
+
 const Container = styled.div`
     width: 932px;
     border-width: 5px;
@@ -78,6 +80,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                         <DeleteButtonText>Delete</DeleteButtonText>
                     </DeleteButton>
                 </Row>
+                <TaskProgressBar percentage={this.props.completion} />
             </Container>
         );
     }
