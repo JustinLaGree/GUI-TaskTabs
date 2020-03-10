@@ -68,6 +68,8 @@ export class TaskView extends React.Component<TaskViewProps>{
     name: string;
     displayedName: string;
     displayedDueDate: string;
+    today: Date;
+    daysLeft: number;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -75,10 +77,11 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.name = props.name;
         this.displayedName = this.name;
 
+        this.today = new Date();
+        this.daysLeft = this.calculateDaysLeft();
         this.displayedDueDate = (this.props.dueDate.getMonth() + 1) +
         "/" + this.props.dueDate.getDay() + "/"
         + this.props.dueDate.getFullYear();
-
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -86,6 +89,13 @@ export class TaskView extends React.Component<TaskViewProps>{
         if (this.name.length > 16) {
             this.displayedName = this.name.substring(0, 15);
             this.displayedName += "...";
+        }
+    }
+
+    //Calculates the difference between the current date and the due date 
+    calculateDaysLeft = () => {
+        if(this.today != this.props.dueDate) {
+            return Math.floor((Date.UTC(this.props.dueDate.getFullYear(), this.props.dueDate.getMonth(), this.props.dueDate.getDate()) - Date.UTC(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()) ) /(1000 * 60 * 60 * 24));
         }
     }
 
@@ -108,6 +118,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                         <LabelText>{this.displayedDueDate}</LabelText>
                     </CalendarButton>
                 </LabelText>
+                <LabelText> {this.daysLeft} Days Left! </LabelText>
             </Container>
         );
     }
