@@ -79,6 +79,7 @@ export class TaskView extends React.Component<TaskViewProps>{
 
         this.today = new Date();
         this.daysLeft = 0;
+        this.displayedDueDate = "1/1/1900"
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
