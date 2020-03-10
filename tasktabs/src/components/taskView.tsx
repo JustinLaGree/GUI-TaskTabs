@@ -40,6 +40,17 @@ const DeleteButtonText = styled.div`
     font-size: 32px;
 `;
 
+const LabelText = styled.div`
+    font-size: 32px;
+    text-align: center;
+`;
+
+const CalendarButton = styled.button`
+    width: 180px;
+    height: 50px;
+    margin: 5px;
+`;
+
 const Row = styled.div`
     display: flex;
     flex-direction: row;
@@ -49,18 +60,25 @@ interface TaskViewProps {
     name: string;
     completion: number;
     description: string;
+    dueDate: Date;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
 export class TaskView extends React.Component<TaskViewProps>{
     name: string;
     displayedName: string;
+    displayedDueDate: string;
 
     constructor(props: TaskViewProps) {
         super(props);
 
         this.name = props.name;
         this.displayedName = this.name;
+
+        this.displayedDueDate = (this.props.dueDate.getMonth() + 1) +
+        "/" + this.props.dueDate.getDay() + "/"
+        + this.props.dueDate.getFullYear();
+
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -85,6 +103,11 @@ export class TaskView extends React.Component<TaskViewProps>{
                     </DeleteButton>
                 </Row>
                 <TaskProgressBar percentage={this.props.completion} />
+                <LabelText>Date Due:
+                    <CalendarButton>
+                        <LabelText>{this.displayedDueDate}</LabelText>
+                    </CalendarButton>
+                </LabelText>
             </Container>
         );
     }
