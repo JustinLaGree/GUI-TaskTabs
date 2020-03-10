@@ -102,8 +102,9 @@ export class TaskView extends React.Component<TaskViewProps>{
             var todayMonth = this.today.getMonth() + 1;
             var todayYear = this.today.getFullYear();
             var todayDay = this.today.getDate();
+            var divide = 1000 * 60 * 60 * 24;
 
-            this.daysLeft = Math.floor((Date.UTC(dueYear, dueMonth, dueDay) - Date.UTC(todayYear, todayMonth, todayDay)) / (1000 * 60 * 60 * 24));
+            this.daysLeft = Math.floor((Date.UTC(dueYear, dueMonth, dueDay) - Date.UTC(todayYear, todayMonth, todayDay)) / divide);
         }
     }
 
