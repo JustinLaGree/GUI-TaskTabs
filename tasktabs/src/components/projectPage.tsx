@@ -37,7 +37,7 @@ export class ProjectPage extends React.Component<{}>{
             <ProjectButton />
           </Column>
         </BlueSideBar>
-        <TaskView name="Project With a Very Long Name" completion={10} description="test" />
+        <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)}/>
       </Container>
     );
   }
