@@ -78,9 +78,10 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.displayedName = this.name;
 
         this.today = new Date();
-        this.daysLeft = this.calculateDaysLeft();
+        this.daysLeft = 0;
+
         this.displayedDueDate = (this.props.dueDate.getMonth() + 1) +
-        "/" + this.props.dueDate.getDay() + "/"
+        "/" + this.props.dueDate.getDate() + "/"
         + this.props.dueDate.getFullYear();
     }
 
@@ -92,15 +93,23 @@ export class TaskView extends React.Component<TaskViewProps>{
         }
     }
 
-    //Calculates the difference between the current date and the due date 
+    //Calculates the difference between the current date and the due date
     calculateDaysLeft = () => {
         if(this.today != this.props.dueDate) {
-            return Math.floor((Date.UTC(this.props.dueDate.getFullYear(), this.props.dueDate.getMonth(), this.props.dueDate.getDate()) - Date.UTC(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()) ) /(1000 * 60 * 60 * 24));
+            var dueMonth = this.props.dueDate.getMonth() + 1;
+            var dueYear = this.props.dueDate.getFullYear();
+            var dueDay = this.props.dueDate.getDate();
+            var todayMonth = this.today.getMonth() + 1;
+            var todayYear = this.today.getFullYear();
+            var todayDay = this.today.getDate();
+
+            this.daysLeft = Math.floor((Date.UTC(dueYear, dueMonth, dueDay) - Date.UTC(todayYear, todayMonth, todayDay)) / (1000 * 60 * 60 * 24));
         }
     }
 
     render() {
         this.checkNameLength();
+        this.calculateDaysLeft();
         return (
             <Container>
                 <Row>
