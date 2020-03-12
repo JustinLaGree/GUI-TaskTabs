@@ -32,8 +32,8 @@ const DeleteButton = styled.button`
     width: 177px;
     height: 40px;
     position: absolute;
-    top: 100px;
-    right: 50px;
+    top: 60px;
+    right: 30px;
 `;
 
 const DeleteButtonText = styled.div`
@@ -54,6 +54,7 @@ const CalendarButton = styled.button`
 const Row = styled.div`
     display: flex;
     flex-direction: row;
+    position: relative;
 `;
 
 interface TaskViewProps {

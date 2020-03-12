@@ -10,6 +10,13 @@ const ProgressBar = styled.div`
     margin: auto;
 `;
 
+const SubTaskProgressBar = styled.div`
+    height: 105px;
+    width: 395px;
+    position: relative;
+    margin: auto;
+`;
+
 interface FillingProps {
     percentage: string;
     color: string;
@@ -33,6 +40,7 @@ const PercentageText = styled.div`
 
 interface ProgressBarProps {
     percentage: number;
+    isTaskButton?: boolean;
 };
 
 // ProgressBar takes in the percentage completion as a number and renders the
@@ -56,11 +64,22 @@ export class TaskProgressBar extends React.Component<ProgressBarProps> {
 
     render() {
         const color = this.determineColor();
-        return (
-            <ProgressBar>
-                <ProgressBarFilling percentage={this.props.percentage.toString()} color={color}/>
-                <PercentageText>{this.props.percentage}%</PercentageText>
-            </ProgressBar>
-        )
+
+        if (this.props.isTaskButton) {
+            return (
+                <SubTaskProgressBar>
+                    <ProgressBarFilling percentage={this.props.percentage.toString()} color={color} />
+                    <PercentageText>{this.props.percentage}%</PercentageText>
+                </SubTaskProgressBar>
+            )
+
+        } else {
+            return (
+                <ProgressBar>
+                    <ProgressBarFilling percentage={this.props.percentage.toString()} color={color} />
+                    <PercentageText>{this.props.percentage}%</PercentageText>
+                </ProgressBar>
+            )
+        }
     }
 }
