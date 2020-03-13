@@ -62,6 +62,7 @@ interface TaskViewProps {
     completion: number;
     description: string;
     dueDate: Date;
+    startDate: Date;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -71,6 +72,7 @@ export class TaskView extends React.Component<TaskViewProps>{
     displayedDueDate: string;
     today: Date;
     daysLeft: number;
+    displayedStartDate: string;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -80,7 +82,8 @@ export class TaskView extends React.Component<TaskViewProps>{
 
         this.today = new Date();
         this.daysLeft = 0;
-        this.displayedDueDate = "1/1/1900"
+        this.displayedDueDate = "1/1/1900";
+        this.displayedStartDate = "1/1/1900";
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -91,8 +94,7 @@ export class TaskView extends React.Component<TaskViewProps>{
         }
     }
 
-    //Calculates the difference between the current date and the due date\
-    //also takes the due date and turns it into a string
+    //Calculates the difference between the current date and the due date
     calculateDaysLeft = () => {
         if(this.today != this.props.dueDate) {
             const dueMonth = this.props.dueDate.getMonth() + 1;
@@ -104,14 +106,33 @@ export class TaskView extends React.Component<TaskViewProps>{
             const divide = 1000 * 60 * 60 * 24;
 
             this.daysLeft = Math.floor((Date.UTC(dueYear, dueMonth, dueDay) - Date.UTC(todayYear, todayMonth, todayDay)) / divide);
-
-            this.displayedDueDate = dueMonth + "/" + dueDay + "/" + dueYear;
         }
+    }
+
+    //Takes the due date and turns it into a string
+    dueDateString = () => {
+        const dueMonth = this.props.dueDate.getMonth() + 1;
+        const dueYear = this.props.dueDate.getFullYear();
+        const dueDay = this.props.dueDate.getDate();
+
+        this.displayedDueDate = dueMonth + "/" + dueDay + "/" + dueYear;
+
+    }
+
+    //Takes the start date and turns it into a string
+    startDateString = () => {
+        const month = this.props.startDate.getMonth() + 1;
+        const year = this.props.startDate.getFullYear();
+        const day = this.props.startDate.getDate();
+
+        this.displayedStartDate = month + "/" + day + "/" + year;
     }
 
     render() {
         this.checkNameLength();
         this.calculateDaysLeft();
+        this.dueDateString();
+        this.startDateString();
         return (
             <Container>
                 <Row>
@@ -130,6 +151,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                     </CalendarButton>
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
+                <LabelText> Date Started: {this.displayedStartDate} </LabelText>
             </Container>
         );
     }
