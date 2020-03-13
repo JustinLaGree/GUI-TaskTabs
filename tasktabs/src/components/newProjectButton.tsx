@@ -16,13 +16,13 @@ export class ProjectButton extends React.Component<{}>{
 
     render() {
         return (
-          <>
-            <ProjectButtonBox>
-                <ButtonText>
-                    Create Project +
+            <>
+                <ProjectButtonBox>
+                    <ButtonText>
+                        Create Project +
                 </ButtonText>
-            </ProjectButtonBox>
-          </>
+                </ProjectButtonBox>
+            </>
         );
     }
 };
