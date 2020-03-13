@@ -2,7 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { TaskProgressBar } from './progressBar';
-import { StatusDropdown } from './StatusDropdown';
+import { StatusDropdown } from './statusDropdown';
+import { AssignedDropdown } from './assignedDropdown';
 
 const Container = styled.div`
     width: 932px;
@@ -70,6 +71,7 @@ interface TaskViewProps {
     dueDate: Date;
     startDate: Date;
     status: string;
+    assignedTo: string;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -82,6 +84,7 @@ export class TaskView extends React.Component<TaskViewProps>{
     displayedStartDate: string;
     status: string;
     statusOptions: Array<Options>;
+    assignedOptions: Array<Options>;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -99,6 +102,14 @@ export class TaskView extends React.Component<TaskViewProps>{
             { value: 'active', label: 'Active'},
             { value: 'inactive', label: 'Inactive'},
             { value: 'complete', label: 'Complete'},
+        ];
+
+        //currently placeholders until shared users becomes implemented
+        //the value would likely be the user id, and the label be the name
+        this.assignedOptions = [
+            { value: 'ownerID', label: 'User1'},
+            { value: 'shared1ID', label: 'User2'},
+            { value: 'shared2ID', label: 'User3'},
         ];
     }
 
@@ -168,6 +179,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
                 <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
+                <AssignedDropdown assignedStatus = {this.props.assignedTo} val = {this.statusOptions}/>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                 <LabelText> Average Time Per Task: N/A Days </LabelText>
             </Container>

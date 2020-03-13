@@ -51,9 +51,9 @@ export class ProjectPage extends React.Component<{}>{
         <BlueSideBar>
           <Column>
             <ProjectButton />
-          </Column>
+          </Column> 
         </BlueSideBar>
-        <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)} startDate={new Date(2020,2,14)} status="active"/>
+        <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)} startDate={new Date(2020,2,14)} status="active" assignedTo="User1"/>
         <SubTaskColumn subtasks={testSubTaskData}></SubTaskColumn>
       </Container>
     );
