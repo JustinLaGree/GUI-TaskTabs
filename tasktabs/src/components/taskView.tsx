@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { TaskProgressBar } from './progressBar';
+import { StatusDropdown } from './StatusDropdown';
 
 const Container = styled.div`
     width: 932px;
@@ -57,12 +58,18 @@ const Row = styled.div`
     position: relative;
 `;
 
+interface Options {
+    value: string;
+    label: string;
+}
+
 interface TaskViewProps {
     name: string;
     completion: number;
     description: string;
     dueDate: Date;
     startDate: Date;
+    status: string;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -73,6 +80,8 @@ export class TaskView extends React.Component<TaskViewProps>{
     today: Date;
     daysLeft: number;
     displayedStartDate: string;
+    status: string;
+    statusOptions: Array<Options>;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -84,6 +93,13 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.daysLeft = 0;
         this.displayedDueDate = "1/1/1900";
         this.displayedStartDate = "1/1/1900";
+
+        this.status = props.status;
+        this.statusOptions = [
+            { value: 'active', label: 'Active'},
+            { value: 'inactive', label: 'Inactive'},
+            { value: 'complete', label: 'Complete'},
+        ];
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -151,6 +167,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                     </CalendarButton>
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
+                <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                 <LabelText> Average Time Per Task: N/A Days </LabelText>
             </Container>
