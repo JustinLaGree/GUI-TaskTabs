@@ -152,6 +152,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
+                <LabelText> Average Time Per Task: N/A Days </LabelText>
             </Container>
         );
     }
