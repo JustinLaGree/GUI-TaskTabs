@@ -17,6 +17,7 @@ interface Options {
     label: string;
 }
 
+//Needed in order to do anything with changing the state
 interface StatusState {
     taskStatus: any
 }
@@ -38,6 +39,9 @@ export class StatusDropdown extends React.Component<StatusDropdownProps, StatusS
         this.handleChange = this.handleChange.bind(this);
     }
 
+    //Handles when the state is changed
+    //Currently only changes the status
+    // Will need to add warnings and change parent and children states as nessisary
     handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         this.setState({taskStatus: e.target.value});
     }
@@ -45,6 +49,8 @@ export class StatusDropdown extends React.Component<StatusDropdownProps, StatusS
     render() {
         const taskStatus = this.state.taskStatus;
 
+        //Maps through the array given and sets up the options
+        //Needs to be done in the render() function or will not produce the proper output
         const arrayOp = this.options.map((item, i) => {
             return (
                 <option key={i} value={item.value}>{item.label}</option>
