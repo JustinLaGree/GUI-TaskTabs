@@ -54,6 +54,21 @@ const CalendarButton = styled.button`
     margin: 5px;
 `;
 
+//In order to format the description on the page properly, needed to create a seperate div for it
+const DescBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    left: 175px;
+    margin-top: 10px;
+`;
+
+const DescText = styled.textarea`
+    font-size: 32px;
+    margin: auto;
+    margin-left: 10px;
+`;
+
 const Row = styled.div`
     display: flex;
     flex-direction: row;
@@ -185,6 +200,12 @@ export class TaskView extends React.Component<TaskViewProps>{
                 </Row>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                 <LabelText> Average Time Per Task: N/A Days </LabelText>
+                <Row>
+                    <DescBox>
+                        <LabelText> Description: </LabelText>
+                        <DescText value = {this.props.description} />
+                    </DescBox>
+                </Row>
             </Container>
         );
     }
