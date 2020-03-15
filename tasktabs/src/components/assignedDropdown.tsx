@@ -7,17 +7,23 @@ const LabelText = styled.label`
     text-align: center;
 `;
 
+const Select = styled.select`
+    font-size: 32px;
+    margin: 5px;
+`;
+
 interface Options {
     value: string;
     label: string;
 }
 
+//Needed in order to do anything with changing the state
 interface AssignedState {
-    assignedStatus: any
+    assignedState: any
 }
 
 interface AssignedDropdownProps {
-    assignedStatus: string;
+    assignedState: string;
     val: Array<Options>;
 
 }
@@ -27,19 +33,23 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
 
     constructor(props: AssignedDropdownProps) {
         super(props);
-        this.state = {assignedStatus: props.assignedStatus}
+        this.state = {assignedState: props.assignedState}
         this.options = props.val;
 
         this.handleChange = this.handleChange.bind(this);
     }
 
+    //Handles when state is changed
+    //Will still need to add functionality of the option
     handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        this.setState({assignedStatus: e.target.value});
+        this.setState({assignedState: e.target.value});
     }
 
     render() {
-        const assignedStatus = this.state.assignedStatus;
+        const assignedState = this.state.assignedState;
 
+        //Maps through the array given and sets up the options
+        //Needs to be done in the render() function or will not produce the proper output
         const arrayOp = this.options.map((item, i) => {
             return (
                 <option key={i} value={item.value}>{item.label}</option>
@@ -48,9 +58,9 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
 
         return(
             <LabelText>Assigned to:
-                <select value={assignedStatus} onChange={this.handleChange}>
+                <Select value={assignedState} onChange={this.handleChange}>
                     {arrayOp}
-                </select>
+                </Select>
             </LabelText>
         )
     }
