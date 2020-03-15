@@ -7,6 +7,11 @@ const LabelText = styled.label`
     text-align: center;
 `;
 
+const Select = styled.select`
+    font-size: 32px;
+    margin: 5px;
+`;
+
 interface Options {
     value: string;
     label: string;
@@ -48,9 +53,9 @@ export class StatusDropdown extends React.Component<StatusDropdownProps, StatusS
 
         return(
             <LabelText>Status:
-                <select value={taskStatus} onChange={this.handleChange}>
+                <Select value={taskStatus} onChange={this.handleChange}>
                     {arrayOp}
-                </select>
+                </Select>
             </LabelText>
         )
     }

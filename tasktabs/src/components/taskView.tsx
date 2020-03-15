@@ -178,8 +178,10 @@ export class TaskView extends React.Component<TaskViewProps>{
                     </CalendarButton>
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
-                <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
-                <AssignedDropdown assignedStatus = {this.props.assignedTo} val = {this.statusOptions}/>
+                <Row>
+                    <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
+                    <AssignedDropdown assignedStatus = {this.props.assignedTo} val = {this.statusOptions}/>
+                </Row>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                 <LabelText> Average Time Per Task: N/A Days </LabelText>
             </Container>
