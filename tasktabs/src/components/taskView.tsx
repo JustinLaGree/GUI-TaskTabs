@@ -79,7 +79,12 @@ const Row = styled.div`
 interface Options {
     value: string;
     label: string;
-}
+};
+
+interface User {
+    id: string;
+    name: string;
+};
 
 interface TaskViewProps {
     name: string;
@@ -90,6 +95,8 @@ interface TaskViewProps {
     status: string;
     assignedTo: string;
     tags: Array<string>;
+    owner: User;
+    sharedUsers: Array<User>;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -104,6 +111,8 @@ export class TaskView extends React.Component<TaskViewProps>{
     statusOptions: Array<Options>;
     assignedOptions: Array<Options>;
     tags: Array<string>;
+    owner: User;
+    sharedUsers: Array<User>;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -123,13 +132,8 @@ export class TaskView extends React.Component<TaskViewProps>{
             { value: 'complete', label: 'Complete'},
         ];
 
-        //currently placeholders until shared users becomes implemented
-        //the value would likely be the user id, and the label be the name
-        this.assignedOptions = [
-            { value: 'ownerID', label: 'User1'},
-            { value: 'shared1ID', label: 'User2'},
-            { value: 'shared2ID', label: 'User3'},
-        ];
+        this.owner = props.owner;
+        this.sharedUsers = props.sharedUsers;
 
         this.tags = props.tags;
     }
@@ -201,7 +205,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
                 <Row>
                     <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
-                    <AssignedDropdown assignedState = {this.props.assignedTo} val = {this.assignedOptions}/>
+                    <AssignedDropdown assignedState = {this.props.assignedTo} sharedUsers = {this.sharedUsers} owner = {this.owner}/>
                 </Row>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                 <LabelText> Average Time Per Task: N/A Days </LabelText>

@@ -15,9 +15,9 @@ const Select = styled.select`
     margin: 5px;
 `;
 
-interface Options {
-    value: string;
-    label: string;
+interface User {
+    id: string;
+    name: string;
 }
 
 //Needed in order to do anything with changing the state
@@ -27,17 +27,19 @@ interface AssignedState {
 
 interface AssignedDropdownProps {
     assignedState: string;
-    val: Array<Options>;
-
+    sharedUsers: Array<User>;
+    owner: User;
 }
 
 export class AssignedDropdown extends React.Component<AssignedDropdownProps, AssignedState> {
-    options: Array<Options>;
+    options: Array<User>;
 
     constructor(props: AssignedDropdownProps) {
         super(props);
         this.state = {assignedState: props.assignedState}
-        this.options = props.val;
+        this.options = props.sharedUsers;
+
+        this.options.push(props.owner);
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -55,7 +57,7 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
         //Needs to be done in the render() function or will not produce the proper output
         const arrayOp = this.options.map((item, i) => {
             return (
-                <option key={i} value={item.value}>{item.label}</option>
+                <option key={i} value={item.id}>{item.name}</option>
                 )
         });
 

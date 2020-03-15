@@ -32,6 +32,11 @@ interface SubTask {
   id: number;
 }
 
+interface User {
+    id: string;
+    name: string;
+}
+
 const testSubTaskData: SubTask[] = [
   { name: "Task 1", percentage: 12, id: 0 },
   { name: "Task 2", percentage: 0, id: 1 },
@@ -43,6 +48,13 @@ const testSubTaskData: SubTask[] = [
 
 const testTaskTags = [
     "tag1", "tag2", "tag3",
+];
+
+const testOwner = {id: "ownerID", name: "User1"};
+
+const testSharedWith: User[] = [
+    { id: 'shared1ID', name: 'User2'},
+    { id: 'shared2ID', name: 'User3'},
 ];
 
 // ProjectPage contains the entire application past the Google oauth. This should include the left and right sidebars
@@ -57,7 +69,7 @@ export class ProjectPage extends React.Component<{}>{
             <ProjectButton />
           </Column>
         </BlueSideBar>
-        <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)} startDate={new Date(2020,2,14)} status="active" assignedTo="User1" tags={testTaskTags}/>
+        <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)} startDate={new Date(2020,2,14)} status="active" assignedTo="User1" tags={testTaskTags} owner={testOwner} sharedUsers={testSharedWith}/>
         <SubTaskColumn subtasks={testSubTaskData}></SubTaskColumn>
       </Container>
     );
