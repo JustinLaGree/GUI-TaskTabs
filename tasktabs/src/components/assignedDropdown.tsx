@@ -5,6 +5,8 @@ const LabelText = styled.label`
     font-size: 32px;
     display: block;
     text-align: center;
+    margin: auto;
+    margin-left: 10px;
 `;
 
 const Select = styled.select`
