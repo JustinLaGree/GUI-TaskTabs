@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TaskProgressBar } from './progressBar';
 import { StatusDropdown } from './statusDropdown';
 import { AssignedDropdown } from './assignedDropdown';
+import { TaskTags } from './taskTags';
 
 const Container = styled.div`
     width: 932px;
@@ -88,6 +89,7 @@ interface TaskViewProps {
     startDate: Date;
     status: string;
     assignedTo: string;
+    tags: Array<string>;
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -101,6 +103,7 @@ export class TaskView extends React.Component<TaskViewProps>{
     status: string;
     statusOptions: Array<Options>;
     assignedOptions: Array<Options>;
+    tags: Array<string>;
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -127,6 +130,8 @@ export class TaskView extends React.Component<TaskViewProps>{
             { value: 'shared1ID', label: 'User2'},
             { value: 'shared2ID', label: 'User3'},
         ];
+
+        this.tags = props.tags;
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -206,6 +211,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                         <DescText value = {this.props.description} />
                     </DescBox>
                 </Row>
+                <TaskTags tags = {this.tags}/>
             </Container>
         );
     }
