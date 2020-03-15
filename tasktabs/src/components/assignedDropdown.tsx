@@ -7,6 +7,7 @@ const LabelText = styled.label`
     text-align: center;
     margin: auto;
     margin-left: 10px;
+    margin-bottom: 10px;
 `;
 
 const Select = styled.select`

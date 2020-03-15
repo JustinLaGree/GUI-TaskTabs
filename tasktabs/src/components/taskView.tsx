@@ -45,6 +45,7 @@ const DeleteButtonText = styled.div`
 const LabelText = styled.div`
     font-size: 32px;
     text-align: center;
+    margin-bottom: 10px;
 `;
 
 const CalendarButton = styled.button`
