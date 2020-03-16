@@ -71,6 +71,14 @@ const DescText = styled.textarea`
     margin-left: 10px;
 `;
 
+const HistoryButton = styled.button`
+    width: 207px;
+    height: 110px;
+    position: absolute;
+    bottom: 3px;
+    right: 408px;
+`;
+
 const Row = styled.div`
     display: flex;
     flex-direction: row;
@@ -218,6 +226,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 </Row>
                 <TaskTags tags = {this.tags}/>
                 <ShareUsers owner={this.owner} sharedUsers={this.sharedUsers}/>
+                <HistoryButton> <LabelText> History </LabelText> </HistoryButton>
             </Container>
         );
     }

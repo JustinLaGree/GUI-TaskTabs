@@ -8,7 +8,7 @@ const SharedWithTab = styled.div`
     bottom: 3px;
     left: 303px;
     border: solid 2px black;
-    width: 800px;
+    width: 825px;
     height: 70px;
     border-top: none;
 `;
@@ -20,7 +20,7 @@ const LabelTab = styled.div`
     bottom: 73px;
     left: 303px;
     border: solid 2px black;
-    width: 800px;
+    width: 825px;
     border-bottom: none;
 `;
 
