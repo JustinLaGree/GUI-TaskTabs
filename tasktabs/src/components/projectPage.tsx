@@ -35,6 +35,12 @@ interface SubTask {
 interface User {
     id: string;
     name: string;
+    idKey: number;
+}
+
+interface Tag {
+    tag: string;
+    id: number;
 }
 
 const testSubTaskData: SubTask[] = [
@@ -46,15 +52,17 @@ const testSubTaskData: SubTask[] = [
   { name: "Loooooong task name", percentage: 30.7, id: 5 },
 ];
 
-const testTaskTags = [
-    "tag1", "tag2", "tag3",
+const testTaskTags: Tag[] = [
+    {tag: "Tag1", id: 0},
+    {tag: "Tag2", id: 1},
+    {tag: "Tag3", id: 2},
 ];
 
-const testOwner = {id: "ownerID", name: "User1"};
+const testOwner = {id: "ownerID", name: "User1", idKey: 0};
 
 const testSharedWith: User[] = [
-    { id: 'shared1ID', name: 'User2'},
-    { id: 'shared2ID', name: 'User3'},
+    { id: 'shared1ID', name: 'User2', idKey: 1},
+    { id: 'shared2ID', name: 'User3', idKey: 2},
 ];
 
 // ProjectPage contains the entire application past the Google oauth. This should include the left and right sidebars

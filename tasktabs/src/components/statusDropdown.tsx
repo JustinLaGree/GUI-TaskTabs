@@ -16,6 +16,7 @@ const Select = styled.select`
 `;
 
 interface Options {
+    id: number;
     value: string;
     label: string;
 }
@@ -27,17 +28,17 @@ interface StatusState {
 
 interface StatusDropdownProps {
     taskStatus: string;
-    val: Array<Options>;
+    statusList: Options[];
 
 }
 
 export class StatusDropdown extends React.Component<StatusDropdownProps, StatusState> {
-    options: Array<Options>;
+    options: Options[];
 
     constructor(props: StatusDropdownProps) {
         super(props);
         this.state = {taskStatus: props.taskStatus}
-        this.options = props.val;
+        this.options = props.statusList;
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -56,7 +57,7 @@ export class StatusDropdown extends React.Component<StatusDropdownProps, StatusS
         //Needs to be done in the render() function or will not produce the proper output
         const arrayOp = this.options.map((item, i) => {
             return (
-                <option key={i} value={item.value}>{item.label}</option>
+                <option key={item.id} value={item.value}>{item.label}</option>
                 )
         });
 

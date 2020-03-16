@@ -10,7 +10,7 @@ const LabelText = styled.label`
     font-size: 32px;
 `;
 
-//Have a visual signifyer that a user could remove a tag if they wanted to
+//Have a visual signifier that a user could remove a tag if they wanted to
 //when they click on it
 const TagButton = styled.button`
     border: none;
@@ -31,12 +31,17 @@ const AddTagButton = styled.button`
     height: 50px;
 `;
 
+interface Tag {
+    tag: string;
+    id: number;
+}
+
 interface TaskTagsProps {
-    tags: Array<string>;
+    tags: Tag[];
 }
 
 export class TaskTags extends React.Component<TaskTagsProps> {
-    tags: Array<string>;
+    tags: Tag[];
 
     constructor(props: TaskTagsProps) {
         super(props);
@@ -48,7 +53,7 @@ export class TaskTags extends React.Component<TaskTagsProps> {
         const tagArray = this.tags.map((item , i) =>
         {
             return (
-                <TagButton key={i}> <ButtonText> {item} </ButtonText> </TagButton>
+                <TagButton key={item.id}> <ButtonText> {item.tag} </ButtonText> </TagButton>
             )
         });
 

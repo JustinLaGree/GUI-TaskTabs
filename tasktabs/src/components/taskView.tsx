@@ -69,6 +69,8 @@ const DescText = styled.textarea`
     font-size: 32px;
     margin: auto;
     margin-left: 10px;
+    max-width: 600px;
+    max-height: 150px;
 `;
 
 const HistoryButton = styled.button`
@@ -86,6 +88,7 @@ const Row = styled.div`
 `;
 
 interface Options {
+    id: number;
     value: string;
     label: string;
 };
@@ -93,7 +96,13 @@ interface Options {
 interface User {
     id: string;
     name: string;
+    idKey: number;
 };
+
+interface Tag {
+    tag: string;
+    id: number;
+}
 
 interface TaskViewProps {
     name: string;
@@ -103,9 +112,9 @@ interface TaskViewProps {
     startDate: Date;
     status: string;
     assignedTo: string;
-    tags: Array<string>;
+    tags: Tag[];
     owner: User;
-    sharedUsers: Array<User>;
+    sharedUsers: User[];
 };
 
 // TaskView is intended to be the center view for all tasks, substasks and project heads.
@@ -117,11 +126,11 @@ export class TaskView extends React.Component<TaskViewProps>{
     daysLeft: number;
     displayedStartDate: string;
     status: string;
-    statusOptions: Array<Options>;
-    assignedOptions: Array<Options>;
-    tags: Array<string>;
-    owner: User;
-    sharedUsers: Array<User>;
+    statusOptions: Options[];
+    assignedOptions: Options[];
+    tags: Tag[];
+    owner: User; 
+    sharedUsers: User[];
 
     constructor(props: TaskViewProps) {
         super(props);
@@ -136,9 +145,9 @@ export class TaskView extends React.Component<TaskViewProps>{
 
         this.status = props.status;
         this.statusOptions = [
-            { value: 'active', label: 'Active'},
-            { value: 'inactive', label: 'Inactive'},
-            { value: 'complete', label: 'Complete'},
+            { id: 0, value: 'active', label: 'Active'},
+            { id: 1, value: 'inactive', label: 'Inactive'},
+            { id: 2, value: 'complete', label: 'Complete'},
         ];
 
         this.owner = props.owner;
@@ -213,7 +222,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 </LabelText>
                 <LabelText> {this.daysLeft} Days Left! </LabelText>
                 <Row>
-                    <StatusDropdown taskStatus = {this.status} val = {this.statusOptions}/>
+                    <StatusDropdown taskStatus = {this.status} statusList = {this.statusOptions}/>
                     <AssignedDropdown assignedState = {this.props.assignedTo} sharedUsers = {this.sharedUsers} owner = {this.owner}/>
                 </Row>
                 <LabelText> Date Started: {this.displayedStartDate} </LabelText>
@@ -221,7 +230,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                 <Row>
                     <DescBox>
                         <LabelText> Description: </LabelText>
-                        <DescText value = {this.props.description} />
+                        <DescText defaultValue = {this.props.description} />
                     </DescBox>
                 </Row>
                 <TaskTags tags = {this.tags}/>
