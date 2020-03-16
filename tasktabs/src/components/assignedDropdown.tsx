@@ -36,10 +36,9 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
 
     constructor(props: AssignedDropdownProps) {
         super(props);
-        this.state = {assignedState: props.assignedState}
-        this.options = props.sharedUsers;
+        this.state = {assignedState: props.assignedState};
 
-        this.options.push(props.owner);
+        this.options = props.sharedUsers;
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -64,6 +63,7 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
         return(
             <LabelText>Assigned to:
                 <Select value={assignedState} onChange={this.handleChange}>
+                    <option value={this.props.owner.id}>{this.props.owner.name}</option>
                     {arrayOp}
                 </Select>
             </LabelText>

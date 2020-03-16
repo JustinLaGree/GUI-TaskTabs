@@ -5,6 +5,7 @@ import { TaskProgressBar } from './progressBar';
 import { StatusDropdown } from './statusDropdown';
 import { AssignedDropdown } from './assignedDropdown';
 import { TaskTags } from './taskTags';
+import { ShareUsers } from './shareUsers';
 
 const Container = styled.div`
     width: 932px;
@@ -216,6 +217,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                     </DescBox>
                 </Row>
                 <TaskTags tags = {this.tags}/>
+                <ShareUsers owner={this.owner} sharedUsers={this.sharedUsers}/>
             </Container>
         );
     }
