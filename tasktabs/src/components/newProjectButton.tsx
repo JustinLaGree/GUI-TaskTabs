@@ -2,9 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const ProjectButtonBox = styled.button`
-    width: 280px;
-    height: 50px;
-    background-color: purple;
+    height: 100px;
+    width: 400px;
+    :hover {
+        cursor: pointer;
+    }
 `;
 
 const ButtonText = styled.div`
@@ -19,8 +21,8 @@ export class ProjectButton extends React.Component<{}>{
             <>
                 <ProjectButtonBox>
                     <ButtonText>
-                        Create Project +
-                </ButtonText>
+                        + New Project
+                    </ButtonText>
                 </ProjectButtonBox>
             </>
         );

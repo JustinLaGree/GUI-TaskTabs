@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { SubTaskButton } from './subTaskButton';
+import { ProjectButton } from './newProjectButton';
 
 interface ColumnProps {
     height: number;
@@ -10,17 +11,10 @@ interface ColumnProps {
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  border-width: 5px 5px 5px 0px;
+  border-width: 5px 5px 0px 5px;
   border-style: solid;
+  width: 400px;
   height: ${(props: ColumnProps) => props.height}px;
-`;
-
-const NewTaskButton = styled.button`
-    height: 100px;
-    width: 400px;
-    :hover {
-        cursor: pointer;
-    }
 `;
 
 interface SubTask {
@@ -29,17 +23,15 @@ interface SubTask {
     id: number;
 }
 
-interface SubTaskColumnProps {
+interface ProjectColumnProps {
     subtasks: SubTask[];
 }
 
-// This creates the entire right-hand column of project page. It handles the button that creates a new task,
-// and hands down a single element of a subtask array to create subtask buttons one by one.
-export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
+export class ProjectColumn extends React.Component<ProjectColumnProps> {
 
-    constructor(props: SubTaskColumnProps) {
+    constructor(props: ProjectColumnProps) {
         super(props);
-
+        
         this.state = { height: 0 };
     }
 
@@ -65,14 +57,17 @@ export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
     }
 
     render() {
+
         const height = this.checkHeight();
         return (
-            <Column height = {height}>
-                <NewTaskButton>+ New Task</NewTaskButton>
-                {this.props.subtasks.map((task) => {
-                    return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id}></SubTaskButton>;
-                })}
-            </Column>
+            <>
+                <Column height={height} >
+                    <ProjectButton />
+                    {this.props.subtasks.map((task) => {
+                        return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id}></SubTaskButton>;
+                    })}
+                </Column>
+            </>
         );
     }
-};
+}

@@ -7,11 +7,30 @@ import { AssignedDropdown } from './assignedDropdown';
 import { TaskTags } from './taskTags';
 import { ShareUsers } from './shareUsers';
 
+interface ColumnProps {
+    height: number;
+};
+
+// The column will remain at its maximum height, so if the window
+// is shrunk , a scrollbar will remain unless the height of the column 
+// is changed to the window height
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: ${(props: ColumnProps) => props.height}px;
+`;
+
+interface ContainerProps {
+    height: number;
+    width: number;
+};
+
 const Container = styled.div`
-    width: 932px;
     border-width: 5px;
     border-style: solid;
     padding: 50px;
+    height: ${(props: ContainerProps) => props.height}px;
+    width: ${(props: ContainerProps) => props.width}px;
 `;
 
 const Title = styled.div`
@@ -75,8 +94,7 @@ const DescText = styled.textarea`
 
 const HistoryButton = styled.button`
     width: 207px;
-    height: 110px;
-    position: absolute;
+    height: 100px;
     bottom: 3px;
     right: 408px;
 `;
@@ -129,7 +147,7 @@ export class TaskView extends React.Component<TaskViewProps>{
     statusOptions: Options[];
     assignedOptions: Options[];
     tags: Tag[];
-    owner: User; 
+    owner: User;
     sharedUsers: User[];
 
     constructor(props: TaskViewProps) {
@@ -145,15 +163,17 @@ export class TaskView extends React.Component<TaskViewProps>{
 
         this.status = props.status;
         this.statusOptions = [
-            { id: 0, value: 'active', label: 'Active'},
-            { id: 1, value: 'inactive', label: 'Inactive'},
-            { id: 2, value: 'complete', label: 'Complete'},
+            { id: 0, value: 'active', label: 'Active' },
+            { id: 1, value: 'inactive', label: 'Inactive' },
+            { id: 2, value: 'complete', label: 'Complete' },
         ];
 
         this.owner = props.owner;
         this.sharedUsers = props.sharedUsers;
 
         this.tags = props.tags;
+
+        this.state = { width: 0, height: 0 };
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -166,7 +186,7 @@ export class TaskView extends React.Component<TaskViewProps>{
 
     //Calculates the difference between the current date and the due date
     calculateDaysLeft = () => {
-        if(this.today != this.props.dueDate) {
+        if (this.today != this.props.dueDate) {
             const dueMonth = this.props.dueDate.getMonth() + 1;
             const dueYear = this.props.dueDate.getFullYear();
             const dueDay = this.props.dueDate.getDate();
@@ -198,45 +218,87 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.displayedStartDate = month + "/" + day + "/" + year;
     }
 
+    updateDimensions = () => {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    // When this object is displayed, add an event that check for window resizes.
+    componentDidMount() {
+        window.addEventListener('resize', this.updateDimensions);
+    }
+
+    // Remove event when the object is unmounted.
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
+    // Return the height the taskView Container should display at.
+    // Prevents the taskView from getting too small.
+    checkHeight = () => {
+        const shareUsersHeight = 208;
+        const height = window.innerHeight - shareUsersHeight;
+        return height > 620 ? height : 620;
+    }
+
+    // Return the width the taskView Container should display at.
+    // Prevents the taskView from getting too small.
+    checkWidth = () => {
+        const totalSidebarWidth = 930;
+        const width = window.innerWidth - totalSidebarWidth;
+        return width > 920 ? width : 920;
+    }
+
     render() {
         this.checkNameLength();
         this.calculateDaysLeft();
         this.dueDateString();
         this.startDateString();
+
+        const height = this.checkHeight();
+        const width = this.checkWidth();
         return (
-            <Container>
-                <Row>
-                    <SaveButton>
-                        <SaveButtonText>Save</SaveButtonText>
-                    </SaveButton>
-                    <Title>{this.displayedName}</Title>
-                    <DeleteButton>
-                        <DeleteButtonText>Delete</DeleteButtonText>
-                    </DeleteButton>
-                </Row>
-                <TaskProgressBar percentage={this.props.completion} />
-                <LabelText>Date Due:
+            <Column height={window.innerHeight}>
+                <Container height={height} width={width}>
+                    <Row>
+                        <SaveButton>
+                            <SaveButtonText>Save</SaveButtonText>
+                        </SaveButton>
+                        <Title>{this.displayedName}</Title>
+                        <DeleteButton>
+                            <DeleteButtonText>Delete</DeleteButtonText>
+                        </DeleteButton>
+                    </Row>
+                    <TaskProgressBar percentage={this.props.completion} />
+                    <LabelText>Date Due:
                     <CalendarButton>
-                        <LabelText>{this.displayedDueDate}</LabelText>
-                    </CalendarButton>
-                </LabelText>
-                <LabelText> {this.daysLeft} Days Left! </LabelText>
+                            <LabelText>{this.displayedDueDate}</LabelText>
+                        </CalendarButton>
+                    </LabelText>
+                    <LabelText> {this.daysLeft} Days Left! </LabelText>
+                    <Row>
+                        <StatusDropdown taskStatus={this.status} statusList={this.statusOptions} />
+                        <AssignedDropdown assignedState={this.props.assignedTo} sharedUsers={this.sharedUsers} owner={this.owner} />
+                    </Row>
+                    <LabelText> Date Started: {this.displayedStartDate} </LabelText>
+                    <LabelText> Average Time Per Task: N/A Days </LabelText>
+                    <Row>
+                        <DescBox>
+                            <LabelText> Description: </LabelText>
+                            <DescText defaultValue={this.props.description} />
+                        </DescBox>
+                    </Row>
+                    <TaskTags tags={this.tags} />
+
+                </Container>
                 <Row>
-                    <StatusDropdown taskStatus = {this.status} statusList = {this.statusOptions}/>
-                    <AssignedDropdown assignedState = {this.props.assignedTo} sharedUsers = {this.sharedUsers} owner = {this.owner}/>
+                    <ShareUsers owner={this.owner} sharedUsers={this.sharedUsers} />
+                    <HistoryButton>
+                        <LabelText>
+                            History
+                    </LabelText>
+                    </HistoryButton>
                 </Row>
-                <LabelText> Date Started: {this.displayedStartDate} </LabelText>
-                <LabelText> Average Time Per Task: N/A Days </LabelText>
-                <Row>
-                    <DescBox>
-                        <LabelText> Description: </LabelText>
-                        <DescText defaultValue = {this.props.description} />
-                    </DescBox>
-                </Row>
-                <TaskTags tags = {this.tags}/>
-                <ShareUsers owner={this.owner} sharedUsers={this.sharedUsers}/>
-                <HistoryButton> <LabelText> History </LabelText> </HistoryButton>
-            </Container>
+            </Column>
         );
     }
 };
