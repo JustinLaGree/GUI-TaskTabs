@@ -7,17 +7,30 @@ import { AssignedDropdown } from './assignedDropdown';
 import { TaskTags } from './taskTags';
 import { ShareUsers } from './shareUsers';
 
+interface ColumnProps {
+    height: number;
+};
+
+// The column will remain at its maximum height, so if the window
+// is shrunk , a scrollbar will remain unless the height of the column 
+// is changed to the window height
 const Column = styled.div`
     display: flex;
     flex-direction: column;
+    height: ${(props: ColumnProps) => props.height}px;
 `;
 
+interface ContainerProps {
+    height: number;
+    width: number;
+};
+
 const Container = styled.div`
-    width: 932px;
     border-width: 5px;
     border-style: solid;
     padding: 50px;
-    height: ${window.innerHeight - 208}px;
+    height: ${(props: ContainerProps) => props.height}px;
+    width: ${(props: ContainerProps) => props.width}px;
 `;
 
 const Title = styled.div`
@@ -159,6 +172,8 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.sharedUsers = props.sharedUsers;
 
         this.tags = props.tags;
+
+        this.state = { width: 0, height: 0 };
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
@@ -203,14 +218,47 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.displayedStartDate = month + "/" + day + "/" + year;
     }
 
+    updateDimensions = () => {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    // When this object is displayed, add an event that check for window resizes.
+    componentDidMount() {
+        window.addEventListener('resize', this.updateDimensions);
+    }
+
+    // Remove event when the object is unmounted.
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
+    // Return the height the taskView Container should display at.
+    // Prevents the taskView from getting too small.
+    checkHeight = () => {
+        const shareUsersHeight = 208;
+        const height = window.innerHeight - shareUsersHeight;
+        return height > 620 ? height : 620;
+    }
+
+    // Return the width the taskView Container should display at.
+    // Prevents the taskView from getting too small.
+    checkWidth = () => {
+        const totalSidebarWidth = 930;
+        const width = window.innerWidth - totalSidebarWidth;
+        return width > 920 ? width : 920;
+    }
+
     render() {
         this.checkNameLength();
         this.calculateDaysLeft();
         this.dueDateString();
         this.startDateString();
+
+        const height = this.checkHeight();
+        const width = this.checkWidth();
         return (
-            <Column>
-                <Container>
+            <Column height={window.innerHeight}>
+                <Container height={height} width={width}>
                     <Row>
                         <SaveButton>
                             <SaveButtonText>Save</SaveButtonText>
