@@ -4,23 +4,15 @@ import styled from 'styled-components';
 const SharedWithTab = styled.div`
     display: flex;
     flex-direction: row;
-    position: absolute;
-    bottom: 3px;
-    left: 303px;
     border: solid 2px black;
-    width: 825px;
-    height: 70px;
     border-top: none;
+    width: 100%;
 `;
 
 const LabelTab = styled.div`
     display: flex;
     flex-direction: row;
-    position: absolute;
-    bottom: 73px;
-    left: 303px;
     border: solid 2px black;
-    width: 825px;
     border-bottom: none;
 `;
 
@@ -73,26 +65,32 @@ export class ShareUsers extends React.Component<ShareUserProps> {
     owner: User;
     sharedUsers: User[];
 
-    constructor(props: ShareUserProps){
+    constructor(props: ShareUserProps) {
         super(props);
         this.owner = props.owner;
         this.sharedUsers = props.sharedUsers;
-        console.log(props.sharedUsers);
     }
 
     render() {
-        const sharedArray = this.sharedUsers.map((item, i) =>
-        {
+        const sharedArray = this.sharedUsers.map((item) => {
             return (
                 <SharedUserBox key={item.idKey}> <UserText> {item.name} </UserText> </SharedUserBox>
             )
         });
 
-        return(
-            <div>
+        return (
+            <>
                 <LabelTab>
-                    <OwnerBox> <LabelText> Owner </LabelText> </OwnerBox>
-                    <SharedUserBox> <LabelText> Shared With </LabelText> </SharedUserBox>
+                    <OwnerBox>
+                        <LabelText>
+                            Owner
+                        </LabelText>
+                    </OwnerBox>
+                    <SharedUserBox>
+                        <LabelText>
+                            Shared With
+                        </LabelText>
+                    </SharedUserBox>
                 </LabelTab>
                 <SharedWithTab>
                     <OwnerBox>
@@ -103,7 +101,7 @@ export class ShareUsers extends React.Component<ShareUserProps> {
                         <ButtonText> + </ButtonText>
                     </AddUserButton>
                 </SharedWithTab>
-            </div>
+            </>
         )
     }
 }
