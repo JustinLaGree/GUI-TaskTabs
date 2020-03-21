@@ -2,21 +2,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ProjectButton } from './newProjectButton';
+import { ProjectColumn } from './projectColumn';
 import { TaskView } from './taskView';
 import { SubTaskColumn } from './subTaskColumn';
-
-const BlueSideBar = styled.div`
-  background-color: cornflowerblue;
-  width: 300px;
-  height: ${window.innerHeight}px;
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 8px;
-`;
 
 const Container = styled.div`
   position: absolute;
@@ -52,6 +40,15 @@ const testSubTaskData: SubTask[] = [
   { name: "Loooooong task name", percentage: 30.7, id: 5 },
 ];
 
+const testProjectData: SubTask[] = [
+  { name: "Project 1", percentage: 20, id: 0 },
+  { name: "Project 2", percentage: 63, id: 1 },
+  { name: "Project 3", percentage: 52, id: 2 },
+  { name: "Project 4", percentage: 17, id: 3 },
+  { name: "Project 5", percentage: 86, id: 4 },
+  { name: "Loooooong Project name", percentage: 100, id: 5 },
+];
+
 const testTaskTags: Tag[] = [
     {tag: "Tag1", id: 0},
     {tag: "Tag2", id: 1},
@@ -72,11 +69,7 @@ export class ProjectPage extends React.Component<{}>{
   render() {
     return (
       <Container>
-        <BlueSideBar>
-          <Column>
-            <ProjectButton />
-          </Column>
-        </BlueSideBar>
+        <ProjectColumn subtasks={testProjectData}/>
         <TaskView name="Project With a Very Long Name" completion={10} description="test" dueDate={new Date(2020, 2, 24)} startDate={new Date(2020,2,14)} status="active" assignedTo="User1" tags={testTaskTags} owner={testOwner} sharedUsers={testSharedWith}/>
         <SubTaskColumn subtasks={testSubTaskData}></SubTaskColumn>
       </Container>
