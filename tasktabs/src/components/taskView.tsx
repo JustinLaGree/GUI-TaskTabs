@@ -152,8 +152,6 @@ export class TaskView extends React.Component<TaskViewProps>{
 
     constructor(props: TaskViewProps) {
         super(props);
-
-        this.name = props.name;
         this.displayedName = this.name;
 
         this.today = new Date();
@@ -177,11 +175,13 @@ export class TaskView extends React.Component<TaskViewProps>{
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
-    checkNameLength = () => {
-        if (this.name.length > 16) {
-            this.displayedName = this.name.substring(0, 15);
-            this.displayedName += "...";
+    displayName = () => {
+        let displayedName = this.props.name;
+        if (displayedName.length > 16) {
+            displayedName = displayedName.substring(0, 15);
+            displayedName += "...";
         }
+        return displayedName;
     }
 
     //Calculates the difference between the current date and the due date
@@ -249,11 +249,10 @@ export class TaskView extends React.Component<TaskViewProps>{
     }
 
     render() {
-        this.checkNameLength();
         this.calculateDaysLeft();
         this.dueDateString();
         this.startDateString();
-
+        const name = this.displayName();
         const height = this.checkHeight();
         const width = this.checkWidth();
         return (
@@ -263,7 +262,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                         <SaveButton>
                             <SaveButtonText>Save</SaveButtonText>
                         </SaveButton>
-                        <Title>{this.displayedName}</Title>
+                        <Title>{name}</Title>
                         <DeleteButton>
                             <DeleteButtonText>Delete</DeleteButtonText>
                         </DeleteButton>

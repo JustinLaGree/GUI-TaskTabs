@@ -27,10 +27,12 @@ interface SubTask {
     name: string;
     percentage: number;
     id: number;
-}
+    subtasks: SubTask[];
+  }
 
 interface SubTaskColumnProps {
     subtasks: SubTask[];
+    changeHead: (newHead: SubTask) => any;
 }
 
 // This creates the entire right-hand column of project page. It handles the button that creates a new task,
@@ -70,7 +72,7 @@ export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
             <Column height = {height}>
                 <NewTaskButton>+ New Task</NewTaskButton>
                 {this.props.subtasks.map((task) => {
-                    return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id}></SubTaskButton>;
+                    return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id} changeHead={this.props.changeHead} taskHead={task}></SubTaskButton>;
                 })}
             </Column>
         );
