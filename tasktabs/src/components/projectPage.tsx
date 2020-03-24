@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { ProjectColumn } from './projectColumn';
 import { TaskView } from './taskView';
 import { SubTaskColumn } from './subTaskColumn';
+import { SubTask } from './subtaskType';
 
 const Container = styled.div`
   position: absolute;
@@ -13,13 +14,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
 `;
-
-interface SubTask {
-  name: string;
-  percentage: number;
-  id: number;
-  subtasks: SubTask[];
-}
 
 interface User {
   id: string;
@@ -31,17 +25,6 @@ interface Tag {
   tag: string;
   id: number;
 }
-
-/*
-const testSubTaskData: SubTask[] = [
-  { name: "Task 1", percentage: 12, id: 0 },
-  { name: "Task 2", percentage: 0, id: 1 },
-  { name: "Task 3", percentage: 100, id: 2 },
-  { name: "Task 4", percentage: 50, id: 3 },
-  { name: "Task 5", percentage: 81, id: 4 },
-  { name: "Loooooong task name", percentage: 30.7, id: 5 },
-];
-*/
 
 const testProjectData: SubTask = {
     name: "Project 1", percentage: 20, id: 0, subtasks: [

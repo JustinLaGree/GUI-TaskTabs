@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { TaskProgressBar } from './progressBar';
+import { SubTask } from './subtaskType';
 
 // With the percentage bars there, it might not be apparent that they are buttons.
 // With a hover state, we can make that clear by changing the mouse pointer to the pointer hand.
@@ -22,13 +23,6 @@ const SubTaskName = styled.div`
     top: 30px;
     left: 30px;
 `;
-
-interface SubTask {
-    name: string;
-    percentage: number;
-    id: number;
-    subtasks: SubTask[];
-  }
 
 interface SubTaskButtonProps {
     percentage: number;

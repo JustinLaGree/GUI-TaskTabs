@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { SubTaskButton } from './subTaskButton';
 import { ProjectButton } from './newProjectButton';
+import { SubTask } from './subtaskType';
 
 interface ColumnProps {
     height: number;
@@ -16,13 +17,6 @@ const Column = styled.div`
   width: 400px;
   height: ${(props: ColumnProps) => props.height}px;
 `;
-
-interface SubTask {
-    name: string;
-    percentage: number;
-    id: number;
-    subtasks: SubTask[];
-  }
 
 interface ProjectColumnProps {
     task: SubTask;
