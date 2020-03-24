@@ -4,5 +4,7 @@ export interface SubTask {
     id: number;
     description: string;
     subtasks: SubTask[];
+    startDate: Date;
+    dueDate: Date;
 };
   
