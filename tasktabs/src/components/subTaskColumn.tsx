@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { SubTaskButton } from './subTaskButton';
+import { SubTask } from './subtaskType';
 
 interface ColumnProps {
     height: number;
@@ -23,13 +24,6 @@ const NewTaskButton = styled.button`
     }
 `;
 
-interface SubTask {
-    name: string;
-    percentage: number;
-    id: number;
-    subtasks: SubTask[];
-  }
-
 interface SubTaskColumnProps {
     subtasks: SubTask[];
     changeHead: (newHead: SubTask) => any;
@@ -47,7 +41,6 @@ export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
 
     updateDimensions = () => {
         this.setState({ height: window.innerHeight });
-        console.log(this.state);
     };
 
     // When this object is displayed, add an event that check for window resizes.

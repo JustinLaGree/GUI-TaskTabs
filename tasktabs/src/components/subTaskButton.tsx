@@ -53,7 +53,6 @@ export class SubTaskButton extends React.Component<SubTaskButtonProps>{
     }
 
     onButtonClick = () => {
-        console.log(this.props.taskHead);
         this.props.changeHead(this.props.taskHead);
     }
 

@@ -248,6 +248,10 @@ export class TaskView extends React.Component<TaskViewProps>{
         return width > 920 ? width : 920;
     }
 
+    // TODO
+    // When the database is integrated, we need to implement the onChange here so that
+    // the new text is saved in some way and inserted into the database.
+    // <DescText value={description} onChange={e => null} />
     render() {
         this.calculateDaysLeft();
         this.dueDateString();
@@ -255,6 +259,7 @@ export class TaskView extends React.Component<TaskViewProps>{
         const name = this.displayName();
         const height = this.checkHeight();
         const width = this.checkWidth();
+        const description = this.props.description;
         return (
             <Column height={window.innerHeight}>
                 <Container height={height} width={width}>
@@ -283,7 +288,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                     <Row>
                         <DescBox>
                             <LabelText> Description: </LabelText>
-                            <DescText defaultValue={this.props.description} />
+                            <DescText value={description} onChange={e => null} />
                         </DescBox>
                     </Row>
                     <TaskTags tags={this.tags} />

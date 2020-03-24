@@ -33,7 +33,6 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 
     updateDimensions = () => {
         this.setState({ height: window.innerHeight });
-        console.log(this.state);
     };
 
     // When this object is displayed, add an event that check for window resizes.
