@@ -3,8 +3,23 @@ export interface SubTask {
     percentage: number;
     id: number;
     description: string;
-    subtasks: SubTask[];
     startDate: Date;
     dueDate: Date;
+    status: string;
+    assignee: string;
+    tags: Tag[];
+    owner: User;
+    sharedWith: User[];
+    subtasks: SubTask[];
 };
+  
+interface User {
+    id: number;
+    name: string;
+};
+
+interface Tag {
+    tag: string;
+    id: number;
+}
   

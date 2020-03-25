@@ -112,9 +112,8 @@ interface Options {
 };
 
 interface User {
-    id: string;
+    id: number;
     name: string;
-    idKey: number;
 };
 
 interface Tag {
@@ -129,7 +128,7 @@ interface TaskViewProps {
     dueDate: Date;
     startDate: Date;
     status: string;
-    assignedTo: string;
+    assignee: string;
     tags: Tag[];
     owner: User;
     sharedUsers: User[];
@@ -281,7 +280,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                     <LabelText> {this.daysLeft} Days Left! </LabelText>
                     <Row>
                         <StatusDropdown taskStatus={this.status} statusList={this.statusOptions} />
-                        <AssignedDropdown assignedState={this.props.assignedTo} sharedUsers={this.sharedUsers} owner={this.owner} />
+                        <AssignedDropdown assignedState={this.props.assignee} sharedUsers={this.sharedUsers} owner={this.owner} />
                     </Row>
                     <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                     <LabelText> Average Time Per Task: N/A Days </LabelText>

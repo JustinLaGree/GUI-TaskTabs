@@ -16,9 +16,8 @@ const Select = styled.select`
 `;
 
 interface User {
-    id: string;
+    id: number;
     name: string;
-    idKey: number;
 }
 
 //Needed in order to do anything with changing the state
@@ -55,9 +54,9 @@ export class AssignedDropdown extends React.Component<AssignedDropdownProps, Ass
 
         //Maps through the array given and sets up the options
         //Needs to be done in the render() function or will not produce the proper output
-        const arrayOp = this.options.map((item, i) => {
+        const arrayOp = this.options.map((item) => {
             return (
-                <option key={item.idKey} value={item.id}>{item.name}</option>
+                <option key={item.id} value={item.id}>{item.name}</option>
                 )
         });
 
