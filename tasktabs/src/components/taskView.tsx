@@ -94,7 +94,7 @@ const DescText = styled.textarea`
 
 const HistoryButton = styled.button`
     width: 207px;
-    height: 100px;
+    height: 125px;
     bottom: 3px;
     right: 408px;
 `;
@@ -222,10 +222,20 @@ export class TaskView extends React.Component<TaskViewProps>{
     //Checks how many days are left and changes message accordingly
     daysLeftCheck = () => {
         if(this.daysLeft >= 0) {
-            this.displayedDaysLeft = this.daysLeft + " Days Left!";
+            if(this.daysLeft == 1) {
+                this.displayedDaysLeft = this.daysLeft + " Day Left!";
+            }
+            else {
+                this.displayedDaysLeft = this.daysLeft + " Days Left!";
+            }
         }
         else {
-            this.displayedDaysLeft = Math.abs(this.daysLeft) + " Days Late!";
+            if(this.daysLeft == -1) {
+                this.displayedDaysLeft = Math.abs(this.daysLeft) + " Day Late!";
+            }
+            else {
+                this.displayedDaysLeft = Math.abs(this.daysLeft) + " Days Late!";
+            }    
         }
     }
 
