@@ -12,7 +12,7 @@ interface ColumnProps {
 };
 
 // The column will remain at its maximum height, so if the window
-// is shrunk , a scrollbar will remain unless the height of the column 
+// is shrunk , a scrollbar will remain unless the height of the column
 // is changed to the window height
 const Column = styled.div`
     display: flex;
@@ -94,7 +94,7 @@ const DescText = styled.textarea`
 
 const HistoryButton = styled.button`
     width: 207px;
-    height: 100px;
+    height: 125px;
     bottom: 3px;
     right: 408px;
 `;
@@ -141,6 +141,7 @@ export class TaskView extends React.Component<TaskViewProps>{
     displayedDueDate: string;
     today: Date;
     daysLeft: number;
+    displayedDaysLeft: string;
     displayedStartDate: string;
     status: string;
     statusOptions: Options[];
@@ -155,6 +156,7 @@ export class TaskView extends React.Component<TaskViewProps>{
 
         this.today = new Date();
         this.daysLeft = 0;
+        this.displayedDaysLeft = "0 Days Left!";
         this.displayedDueDate = "1/1/1900";
         this.displayedStartDate = "1/1/1900";
 
@@ -217,6 +219,26 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.displayedStartDate = month + "/" + day + "/" + year;
     }
 
+    //Checks how many days are left and changes message accordingly
+    daysLeftCheck = () => {
+        if(this.daysLeft >= 0) {
+            if(this.daysLeft == 1) {
+                this.displayedDaysLeft = this.daysLeft + " Day Left!";
+            }
+            else {
+                this.displayedDaysLeft = this.daysLeft + " Days Left!";
+            }
+        }
+        else {
+            if(this.daysLeft == -1) {
+                this.displayedDaysLeft = Math.abs(this.daysLeft) + " Day Late!";
+            }
+            else {
+                this.displayedDaysLeft = Math.abs(this.daysLeft) + " Days Late!";
+            }    
+        }
+    }
+
     updateDimensions = () => {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     };
@@ -255,6 +277,7 @@ export class TaskView extends React.Component<TaskViewProps>{
         this.calculateDaysLeft();
         this.dueDateString();
         this.startDateString();
+        this.daysLeftCheck();
         const name = this.displayName();
         const height = this.checkHeight();
         const width = this.checkWidth();
@@ -277,7 +300,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                             <LabelText>{this.displayedDueDate}</LabelText>
                         </CalendarButton>
                     </LabelText>
-                    <LabelText> {this.daysLeft} Days Left! </LabelText>
+                    <LabelText> {this.displayedDaysLeft} </LabelText>
                     <Row>
                         <StatusDropdown taskStatus={this.status} statusList={this.statusOptions} />
                         <AssignedDropdown assignedState={this.props.assignee} sharedUsers={this.sharedUsers} owner={this.owner} />
