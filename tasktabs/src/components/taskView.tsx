@@ -112,9 +112,8 @@ interface Options {
 };
 
 interface User {
-    id: string;
+    id: number;
     name: string;
-    idKey: number;
 };
 
 interface Tag {
@@ -129,7 +128,7 @@ interface TaskViewProps {
     dueDate: Date;
     startDate: Date;
     status: string;
-    assignedTo: string;
+    assignee: string;
     tags: Tag[];
     owner: User;
     sharedUsers: User[];
@@ -152,8 +151,6 @@ export class TaskView extends React.Component<TaskViewProps>{
 
     constructor(props: TaskViewProps) {
         super(props);
-
-        this.name = props.name;
         this.displayedName = this.name;
 
         this.today = new Date();
@@ -177,11 +174,13 @@ export class TaskView extends React.Component<TaskViewProps>{
     }
 
     // If the title is too long, we should shorten it to fit the space we have.
-    checkNameLength = () => {
-        if (this.name.length > 16) {
-            this.displayedName = this.name.substring(0, 15);
-            this.displayedName += "...";
+    displayName = () => {
+        let displayedName = this.props.name;
+        if (displayedName.length > 16) {
+            displayedName = displayedName.substring(0, 15);
+            displayedName += "...";
         }
+        return displayedName;
     }
 
     //Calculates the difference between the current date and the due date
@@ -248,14 +247,18 @@ export class TaskView extends React.Component<TaskViewProps>{
         return width > 920 ? width : 920;
     }
 
+    // TODO
+    // When the database is integrated, we need to implement the onChange here so that
+    // the new text is saved in some way and inserted into the database.
+    // <DescText value={description} onChange={e => null} />
     render() {
-        this.checkNameLength();
         this.calculateDaysLeft();
         this.dueDateString();
         this.startDateString();
-
+        const name = this.displayName();
         const height = this.checkHeight();
         const width = this.checkWidth();
+        const description = this.props.description;
         return (
             <Column height={window.innerHeight}>
                 <Container height={height} width={width}>
@@ -263,7 +266,7 @@ export class TaskView extends React.Component<TaskViewProps>{
                         <SaveButton>
                             <SaveButtonText>Save</SaveButtonText>
                         </SaveButton>
-                        <Title>{this.displayedName}</Title>
+                        <Title>{name}</Title>
                         <DeleteButton>
                             <DeleteButtonText>Delete</DeleteButtonText>
                         </DeleteButton>
@@ -277,14 +280,14 @@ export class TaskView extends React.Component<TaskViewProps>{
                     <LabelText> {this.daysLeft} Days Left! </LabelText>
                     <Row>
                         <StatusDropdown taskStatus={this.status} statusList={this.statusOptions} />
-                        <AssignedDropdown assignedState={this.props.assignedTo} sharedUsers={this.sharedUsers} owner={this.owner} />
+                        <AssignedDropdown assignedState={this.props.assignee} sharedUsers={this.sharedUsers} owner={this.owner} />
                     </Row>
                     <LabelText> Date Started: {this.displayedStartDate} </LabelText>
                     <LabelText> Average Time Per Task: N/A Days </LabelText>
                     <Row>
                         <DescBox>
                             <LabelText> Description: </LabelText>
-                            <DescText defaultValue={this.props.description} />
+                            <DescText value={description} onChange={e => null} />
                         </DescBox>
                     </Row>
                     <TaskTags tags={this.tags} />

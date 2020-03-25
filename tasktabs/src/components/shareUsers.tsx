@@ -51,9 +51,8 @@ const AddUserButton = styled.button`
 `;
 
 interface User {
-    id: string;
+    id: number;
     name: string;
-    idKey: number;
 }
 
 interface ShareUserProps {
@@ -74,7 +73,7 @@ export class ShareUsers extends React.Component<ShareUserProps> {
     render() {
         const sharedArray = this.sharedUsers.map((item) => {
             return (
-                <SharedUserBox key={item.idKey}> <UserText> {item.name} </UserText> </SharedUserBox>
+                <SharedUserBox key={item.id}> <UserText> {item.name} </UserText> </SharedUserBox>
             )
         });
 

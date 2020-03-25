@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { TaskProgressBar } from './progressBar';
+import { SubTask } from './subtaskType';
 
 // With the percentage bars there, it might not be apparent that they are buttons.
 // With a hover state, we can make that clear by changing the mouse pointer to the pointer hand.
@@ -26,6 +27,8 @@ const SubTaskName = styled.div`
 interface SubTaskButtonProps {
     percentage: number;
     name: string;
+    taskHead: SubTask;
+    changeHead: (newHead: SubTask) => any;
 }
 
 // This is a single SubTask button. They live in the right hand side of the project page.
@@ -49,10 +52,14 @@ export class SubTaskButton extends React.Component<SubTaskButtonProps>{
         }
     }
 
+    onButtonClick = () => {
+        this.props.changeHead(this.props.taskHead);
+    }
+
     render() {
         this.checkNameLength();
         return (
-            <TaskButton>
+            <TaskButton onClick={this.onButtonClick}>
                 <SubTaskName>{this.displayedName}</SubTaskName>
                 <TaskProgressBar percentage={this.props.percentage} isTaskButton={true}></TaskProgressBar>
             </TaskButton>

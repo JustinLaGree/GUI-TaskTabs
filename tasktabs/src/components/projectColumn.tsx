@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { SubTaskButton } from './subTaskButton';
 import { ProjectButton } from './newProjectButton';
+import { SubTask } from './subtaskType';
 
 interface ColumnProps {
     height: number;
@@ -17,14 +18,9 @@ const Column = styled.div`
   height: ${(props: ColumnProps) => props.height}px;
 `;
 
-interface SubTask {
-    name: string;
-    percentage: number;
-    id: number;
-}
-
 interface ProjectColumnProps {
-    subtasks: SubTask[];
+    task: SubTask;
+    changeHead: (newHead: SubTask) => any;
 }
 
 export class ProjectColumn extends React.Component<ProjectColumnProps> {
@@ -37,7 +33,6 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 
     updateDimensions = () => {
         this.setState({ height: window.innerHeight });
-        console.log(this.state);
     };
 
     // When this object is displayed, add an event that check for window resizes.
@@ -63,9 +58,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
             <>
                 <Column height={height} >
                     <ProjectButton />
-                    {this.props.subtasks.map((task) => {
-                        return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id}></SubTaskButton>;
-                    })}
+                    <SubTaskButton name={this.props.task.name} percentage={this.props.task.percentage} key={this.props.task.id} changeHead={this.props.changeHead} taskHead={this.props.task}></SubTaskButton>;
                 </Column>
             </>
         );

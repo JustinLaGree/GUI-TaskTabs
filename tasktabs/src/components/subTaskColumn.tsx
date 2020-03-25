@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { SubTaskButton } from './subTaskButton';
+import { SubTask } from './subtaskType';
 
 interface ColumnProps {
     height: number;
@@ -23,14 +24,9 @@ const NewTaskButton = styled.button`
     }
 `;
 
-interface SubTask {
-    name: string;
-    percentage: number;
-    id: number;
-}
-
 interface SubTaskColumnProps {
     subtasks: SubTask[];
+    changeHead: (newHead: SubTask) => any;
 }
 
 // This creates the entire right-hand column of project page. It handles the button that creates a new task,
@@ -45,7 +41,6 @@ export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
 
     updateDimensions = () => {
         this.setState({ height: window.innerHeight });
-        console.log(this.state);
     };
 
     // When this object is displayed, add an event that check for window resizes.
@@ -70,7 +65,7 @@ export class SubTaskColumn extends React.Component<SubTaskColumnProps>{
             <Column height = {height}>
                 <NewTaskButton>+ New Task</NewTaskButton>
                 {this.props.subtasks.map((task) => {
-                    return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id}></SubTaskButton>;
+                    return <SubTaskButton name={task.name} percentage={task.percentage} key={task.id} changeHead={this.props.changeHead} taskHead={task}></SubTaskButton>;
                 })}
             </Column>
         );
