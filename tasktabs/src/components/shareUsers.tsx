@@ -9,13 +9,6 @@ const SharedWithTab = styled.div`
     width: 100%;
 `;
 
-const LabelTab = styled.div`
-    display: flex;
-    flex-direction: row;
-    border: solid 2px black;
-    border-bottom: none;
-`;
-
 const UserText = styled.div`
     font-size: 32px;
 `;
@@ -78,29 +71,19 @@ export class ShareUsers extends React.Component<ShareUserProps> {
         });
 
         return (
-            <>
-                <LabelTab>
-                    <OwnerBox>
-                        <LabelText>
-                            Owner
-                        </LabelText>
-                    </OwnerBox>
-                    <SharedUserBox>
-                        <LabelText>
-                            Shared With
-                        </LabelText>
-                    </SharedUserBox>
-                </LabelTab>
                 <SharedWithTab>
                     <OwnerBox>
+                        <LabelText> Owner </LabelText>
                         <UserText> {this.owner.name} </UserText>
                     </OwnerBox>
+                    <SharedUserBox>
+                        <LabelText> Shared With </LabelText>
+                    </SharedUserBox>
                     {sharedArray}
                     <AddUserButton>
                         <ButtonText> + </ButtonText>
                     </AddUserButton>
                 </SharedWithTab>
-            </>
         )
     }
 }
