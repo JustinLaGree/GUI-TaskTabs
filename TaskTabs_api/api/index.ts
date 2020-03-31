@@ -2,6 +2,7 @@
 
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import * as bodyParser from "body-parser";
 import { routeTaskApis } from "./routes/taskRoutes";
 import { routeProjectApis } from "./routes/projectRoutes";
@@ -16,6 +17,9 @@ mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 mongoose.connect(`mongodb://localhost:${ApplicationConfig.database.port}/${ApplicationConfig.database.name}`,
     { useNewUrlParser: true, useUnifiedTopology: true });
+
+// allow cross origin requests
+app.use(cors());
 
 // middleware setup to allow for json routing
 app.use(bodyParser.urlencoded({ extended: true }));
