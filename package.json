@@ -6,8 +6,8 @@
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "reconstructDB": "node dist/reconstructDB.js",
-    "postinstall": "npm i -g typescript && tsc && npm run reconstructDB",
-    "start": "node ."
+    "postinstall": "npm i -g typescript && tsc",
+    "start": "npm run reconstructDB && node ."
   },
   "author": "",
   "license": "ISC",
