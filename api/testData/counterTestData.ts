@@ -13,13 +13,21 @@ export class CounterTestData {
     ];
 
     // clear the counter table and re-generate test data
-    static ConstructTestData(){
-        mongoose.connection.collections.counters.deleteMany({ });
+    static async ConstructTestData(){
+        const saveAsync = async (element: CounterObj) => {
+            const newTask = new Counter(element);
+            await newTask.save();
+        }
 
-        this.inserts.forEach(element => {
-            const newCounter = new Counter(element);
-            newCounter.save();
-        });
+        const execAsync = async () => {
+            await mongoose.connection.collections.counters.deleteMany({ });
+
+            for (const element of this.inserts){
+                await saveAsync(element);
+            }
+        }
+
+        await execAsync();
     }
 
 

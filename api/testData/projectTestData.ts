@@ -14,13 +14,21 @@ export class ProjectTestData {
     ];
 
     // clear the project table and re-generate test data
-    static ConstructTestData(){
-        mongoose.connection.collections.projects.deleteMany({ });
+    static async ConstructTestData(){
+        const saveAsync = async (element: ProjectObj) => {
+            const newTask = new Project(element);
+            await newTask.save();
+        }
 
-        this.inserts.forEach(element => {
-            const newProject = new Project(element);
-            newProject.save();
-        });
+        const execAsync = async () => {
+            await mongoose.connection.collections.projects.deleteMany({ });
+
+            for (const element of this.inserts){
+                await saveAsync(element);
+            }
+        }
+
+        await execAsync();
     }
 
 
