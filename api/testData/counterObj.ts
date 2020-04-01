@@ -1,13 +1,7 @@
 'use strict';
 
-// interface for object that matches our counter schema
-export interface ICounterObj{
-    _id: string;
-    sequenceValue: number
-}
-
 // object that matches our counter schema ... for use in creating test data
-export class CounterObj implements ICounterObj{
+export class CounterObj{
     _id: string;
     sequenceValue: number
 
