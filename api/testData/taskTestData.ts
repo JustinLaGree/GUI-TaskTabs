@@ -16,13 +16,21 @@ export class TaskTestData {
     ];
 
     // clear the tasks table and re-generate test data
-    static ConstructTestData(){
-        mongoose.connection.collections.tasks.deleteMany({ });
-
-        this.inserts.forEach(element => {
+    static async ConstructTestData(){
+        const saveAsync = async (element: TaskObj) => {
             const newTask = new Task(element);
-            newTask.save();
-        });
+            await newTask.save();
+        }
+
+        const execAsync = async () => {
+            await mongoose.connection.collections.tasks.deleteMany({ });
+
+            for (const element of this.inserts){
+                await saveAsync(element);
+            }
+        }
+
+        await execAsync();
     }
 
 

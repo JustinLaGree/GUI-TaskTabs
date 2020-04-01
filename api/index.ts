@@ -16,10 +16,10 @@ const port: string = process.env.PORT || ApplicationConfig.api.port.toString();
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 
-if(process.env.NODE_ENV === "development") {  
+if(process.env.NODE_ENV === "development") {
     mongoose.connect(`mongodb://localhost:${port}/${ApplicationConfig.database.name}`,
     { useNewUrlParser: true, useUnifiedTopology: true });
-}  
+}
 else {
     mongoose.connect(`mongodb://root:tasktabs1@ds133086.mlab.com:33086/heroku_hn0kpx12`,
     { useNewUrlParser: true, useUnifiedTopology: true });
