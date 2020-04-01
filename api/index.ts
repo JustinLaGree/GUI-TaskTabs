@@ -10,12 +10,12 @@ import { ApplicationConfig } from "./ApplicationConfig";
 
 // set up the express application
 const app: express.Application = express();
-const port: number = ApplicationConfig.api.port;
+const port: string = process.env.PORT || ApplicationConfig.api.port.toString();
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
-mongoose.connect(`mongodb://localhost:${ApplicationConfig.database.port}/${ApplicationConfig.database.name}`,
+mongoose.connect(`mongodb://localhost:${port}/${ApplicationConfig.database.name}`,
     { useNewUrlParser: true, useUnifiedTopology: true });
 
 // allow cross origin requests
