@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
-    "postinstall": "npm i -g typescript && tsc",
-    "start": "node .",
-    "reconstructDB": "node dist/reconstructDB.js"
+    "reconstructDB": "node dist/reconstructDB.js",
+    "postinstall": "npm i -g typescript && tsc && npm run reconstructDB",
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",
