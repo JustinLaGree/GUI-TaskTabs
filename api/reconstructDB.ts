@@ -14,7 +14,7 @@ if(process.env.NODE_ENV === "production") {
     mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 }
 else {
-    mongoose.connect(`mongodb://localhost:${ApplicationConfig.api.port}/${ApplicationConfig.database.name}`,
+    mongoose.connect(`mongodb://localhost:${ApplicationConfig.database.port}/${ApplicationConfig.database.name}`,
     { useNewUrlParser: true, useUnifiedTopology: true });
 }
 
