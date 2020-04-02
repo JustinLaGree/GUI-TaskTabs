@@ -5,6 +5,9 @@ import mongoose from "mongoose";// using the mongoose library (js/mongodb integr
 // Our MongoDB schema for the Task table
 const TaskSchema: mongoose.Schema = new mongoose.Schema({
     _id: String,
+    parentId: {
+        type: Number
+    },
     title: {
         type: String,
         required: "A title must be specified",
@@ -27,6 +30,11 @@ const TaskSchema: mongoose.Schema = new mongoose.Schema({
     status: {
         type: String,
         required: "A status must be specified"
+    },
+    progress: {
+        type: Number,
+        min: 0,
+        max: 100
     }
 });
 

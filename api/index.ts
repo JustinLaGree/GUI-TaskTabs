@@ -7,24 +7,22 @@ import * as bodyParser from "body-parser";
 import { routeTaskApis } from "./routes/taskRoutes";
 import { routeProjectApis } from "./routes/projectRoutes";
 import { ApplicationConfig } from "./ApplicationConfig";
-
-// set up the express application
-const app: express.Application = express();
-const port: string = process.env.PORT || ApplicationConfig.api.port.toString();
+import { routeSubtasksApis } from "./routes/subtasksRoutes";
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 
-if(process.env.NODE_ENV === "development") {
-    mongoose.connect(`mongodb://localhost:${port}/${ApplicationConfig.database.name}`,
-    { useNewUrlParser: true, useUnifiedTopology: true });
+if(process.env.NODE_ENV === "production") {
+    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 }
 else {
-    mongoose.connect(`mongodb://root:tasktabs1@ds133086.mlab.com:33086/heroku_hn0kpx12`,
+    mongoose.connect(`mongodb://localhost:${ApplicationConfig.database.port}/${ApplicationConfig.database.name}`,
     { useNewUrlParser: true, useUnifiedTopology: true });
 }
 
+// set up the express application
+const app: express.Application = express();
 
 // allow cross origin requests
 app.use(cors());
@@ -36,6 +34,8 @@ app.use(bodyParser.json());
 // route all API endpoints
 routeTaskApis(app);
 routeProjectApis(app);
+routeSubtasksApis(app);
 
 // listen on the configured port
+const port: string = process.env.PORT || ApplicationConfig.api.port.toString();
 app.listen(port);

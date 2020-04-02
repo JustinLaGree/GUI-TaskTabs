@@ -11,16 +11,6 @@ import { ProjectController } from "./projectController";
 // export controller for use in the routes generation
 export class TaskController {
 
-    // list all of the tasks in the db
-    static list_all_tasks(_req: express.Request, res: express.Response) {
-        Task.find({}, (err, task) => {
-            if (err){
-                res.send(err);
-            }
-            res.json(task);
-      });
-    }
-
     // get a specific task in the db by passing an id
     static get_a_task(req: express.Request, res: express.Response) {
         Task.findById(req.params.taskId, (err, task) => {
