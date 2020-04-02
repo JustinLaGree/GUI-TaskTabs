@@ -9,8 +9,8 @@ export class ProjectTestData {
 
     // list of inserts to be saved into the db
     static inserts: ProjectObj[] = [
-        new ProjectObj("1"),
-        new ProjectObj("3")
+        new ProjectObj("1", "test@gmail.com", [ "test@gmail.com", "test2@gmail.com" ] ),
+        new ProjectObj("3", "test2@gmail.com", [ "test2@gmail.com", "test3@gmail.com" ] )
     ];
 
     // clear the project table and re-generate test data

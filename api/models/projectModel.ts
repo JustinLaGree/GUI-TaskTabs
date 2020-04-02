@@ -4,7 +4,14 @@ import mongoose from "mongoose";// using the mongoose library (js/mongodb integr
 
 // Our MongoDB schema for the project table
 const ProjectSchema: mongoose.Schema = new mongoose.Schema({
-    _id: String
+    _id: String,
+    owner: {
+        type: String,
+        required: true
+    },
+    collaborators: [{
+        type: String
+    }]
 });
 
 // Export this schema for use in other js files.
