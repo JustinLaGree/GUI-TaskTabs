@@ -4,15 +4,19 @@
 import express from "express";
 import { Project } from "../models/projectModel";
 import { Task } from "../models/taskModel";
+import { Document } from "mongoose";
+import { JsonDocumentHelpers } from "../helpers/jsonDocumentHelpers";
 
 // export controller for use in the routes generation
 export class ProjectController {
 
     // list all of the projects in the db
     static async list_all_projects(_req: express.Request, res: express.Response) {
+        let projectJson: Document[];
         let projects: string[] = [];
 
         await Project.find({}, (_, project) => {
+            projectJson = project;
             projects = project.map(a => a._id);
         });
 
@@ -20,7 +24,14 @@ export class ProjectController {
             if (err){
                 res.send(err);
             }
-            res.json(tasks);
+
+            const mergedJson: Document[] = [];
+            for(const project of projectJson){
+                const task = tasks.filter((el) => el._id === project._id)[0];
+                mergedJson.push(JsonDocumentHelpers.mergeJsonDocuments(task, project));
+            }
+
+            res.json(mergedJson);
         });
     }
 
