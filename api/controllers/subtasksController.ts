@@ -13,6 +13,7 @@ export class SubtasksController {
         Task.find({"parentId": req.params.taskId}, (err, tasks) => {
             if (err){
                 res.send(err);
+                return;
             }
             res.json(tasks);
         });

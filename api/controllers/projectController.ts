@@ -11,7 +11,7 @@ import { JsonDocumentHelpers } from "../helpers/jsonDocumentHelpers";
 export class ProjectController {
 
     // list all of the projects in the db
-    static async list_all_projects(_req: express.Request, res: express.Response) {
+    public static async list_all_projects(_req: express.Request, res: express.Response) {
         let projectJson: Document[];
         let projects: string[] = [];
 
@@ -23,9 +23,10 @@ export class ProjectController {
         Task.find({ "_id" : { $in: projects }}, (err, tasks) => {
             if (err){
                 res.send(err);
+                return;
             }
 
-            const mergedJson: Document[] = [];
+            const mergedJson = [];
             for(const project of projectJson){
                 const task = tasks.filter((el) => el._id === project._id)[0];
                 mergedJson.push(JsonDocumentHelpers.mergeJsonDocuments(task, project));
@@ -37,15 +38,13 @@ export class ProjectController {
 
     // create a new project in the db
     // uses body of x-www-form-urlencoded type
-    static create_a_project(body: any, res: express.Response) {
-        const newProject = new Project();
-        newProject._id = body._id;
+    public static async create_a_project(body: any, res: express.Response) {
+        const newProject = new Project(body);
 
         if (newProject._id){
-            newProject.save((err) => {
+            await newProject.save(async (err) => {
                 if (err){
-                    res.send(err);
-                    return;
+                    throw new Error(err);
                 }
             });
         }

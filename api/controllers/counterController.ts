@@ -15,12 +15,12 @@ export class CounterController {
 
     // update a specific counter in the db by passing an id ... all other info expected in the body
     // uses body of x-www-form-urlencoded type
-    static update_a_counter(counterId: string, body: any) {
+    static async update_a_counter(counterId: string, body: any) {
         const update = new Counter(body);
 
-        Counter.findByIdAndUpdate(counterId, update, (err, counter) => {
+        await Counter.findByIdAndUpdate(counterId, update, (err, counter) => {
             if (err){
-                throw new ErrorEvent(err);
+                throw new Error(err);
             }
             return counter;
         });
