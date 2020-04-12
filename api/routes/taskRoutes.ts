@@ -14,5 +14,5 @@ export function routeTaskApis(app: express.Application) {
   app.route('/api/tasks/:taskId')
     .get(TaskController.get_a_task)
     .put(TaskController.update_a_task)
-    .delete(TaskController.delete_a_task);
+    .delete(TaskController.delete_a_task_and_subtasks);
 };

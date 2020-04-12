@@ -1,19 +1,19 @@
 'use strict';
 
 // import mongoose and express
-import express from "express";
+import express, { json } from "express";
 import { Task } from "../models/taskModel"
 import { Counter } from "../models/counterModel"
 import { CounterController, CounterMapping } from "./counterController";
 import { Project } from "../models/projectModel";
 import { ProjectController } from "./projectController";
-import { Error } from "mongoose";
+import { Error, Document } from "mongoose";
 
 // export controller for use in the routes generation
 export class TaskController {
 
     // get a specific task in the db by passing an id
-    static get_a_task(req: express.Request, res: express.Response) {
+    public static get_a_task(req: express.Request, res: express.Response) {
         Task.findById(req.params.taskId, (err, task) => {
             if (err){
                 res.send(err);
@@ -23,12 +23,12 @@ export class TaskController {
     }
 
     // create a task without creating a corresponding project in the db
-    static create_a_task_without_project(req: express.Request, res: express.Response){
+    public static create_a_task_without_project(req: express.Request, res: express.Response){
         TaskController.create_a_task(req, res);
     }
 
     // create a task as well as a corresponding project in the db
-    static create_a_task_project(req: express.Request, res: express.Response){
+    public static create_a_task_project(req: express.Request, res: express.Response){
         TaskController.create_a_task(req, res, /*isProject:*/ true);
     }
 
@@ -69,7 +69,7 @@ export class TaskController {
 
     // update a specific task in the db by passing an id ... all other info expected in the body
     // uses body of x-www-form-urlencoded type
-    static update_a_task(req: express.Request, res: express.Response) {
+    public static update_a_task(req: express.Request, res: express.Response) {
         const update = new Task(req.body);
 
         Task.findByIdAndUpdate(req.params.taskId, update, (err, task) => {
@@ -82,25 +82,61 @@ export class TaskController {
     }
 
     // delete a specific task/project in the db by passing an id
-    static delete_a_task(req: express.Request, res: express.Response) {
-        Project.findByIdAndDelete(req.params.taskId, (err) => {
+    public static async delete_a_task_and_subtasks(req: express.Request, res: express.Response) {
+        let subtasks: string[] = [];
+
+        //start with the current task as list of tasks to target
+        const taskId: string = req.params.taskId;
+        subtasks.push(taskId);
+
+        //build a list of subtasks using the current task Id
+        const buildSubtaskList = async (currId: string, temp: string[]): Promise<string[]> => {
+            let subs: string[] = [];
+
+            await Task.find({"parentId": currId}, (err, tasks) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+                subs = tasks.map(t => t._id);
+            })
+
+            return temp.concat(subs);
+        };
+
+        //iterate over each subtask. delete it and build a list of all subtasks of each task combined
+        const iterateOverSubtasks = async (): Promise<string[]> => {
+            let temp: string[] = [];
+            for (const currId of subtasks){
+                await TaskController.delete_a_task(currId, res);
+                temp = await buildSubtaskList(currId, temp);
+            }
+            return temp;
+        };
+
+        //delete a level of subtasks until there are no subtasks in the db
+        do {
+            const temp = await iterateOverSubtasks();
+            subtasks = temp;
+        } while (subtasks.length > 0);
+
+        //successful deletion
+        res.json({ message: `Task ${taskId} and all subtasks successfully deleted`});
+    }
+
+    private static async delete_a_task(taskId: string, res: express.Response){
+        Project.findByIdAndDelete(taskId, (err) => {
             if (err){
                 res.send(err);
                 return;
             }
         });
 
-        Task.findByIdAndDelete(req.params.taskId, (err, task) => {
+        Task.findByIdAndDelete(taskId, (err, task) => {
             if (err){
                 res.send(err);
                 return;
             }
-            else if (task) {
-                res.json({ message: `Task ${req.params.taskId} successfully deleted`});
-                return;
-            }
         });
-
-
     }
 }
