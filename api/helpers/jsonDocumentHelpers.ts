@@ -10,7 +10,12 @@ export class JsonDocumentHelpers{
         const aObj = a.toObject();
         const bObj = b.toObject();
 
-        return this.mergeJson(aObj, bObj);
+        if (a && b){
+            return this.mergeJson(aObj, bObj);
+        } else {
+            return aObj;
+        }
+
     }
 
     // merge two json any objects together

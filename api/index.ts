@@ -8,6 +8,7 @@ import { routeTaskApis } from "./routes/taskRoutes";
 import { routeProjectApis } from "./routes/projectRoutes";
 import { ApplicationConfig } from "./ApplicationConfig";
 import { routeSubtasksApis } from "./routes/subtasksRoutes";
+import { routeSettingsApis } from "./routes/SettingsRoutes";
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
@@ -35,6 +36,7 @@ app.use(bodyParser.json());
 routeTaskApis(app);
 routeProjectApis(app);
 routeSubtasksApis(app);
+routeSettingsApis(app);
 
 // listen on the configured port
 const port: string = process.env.PORT || ApplicationConfig.api.port.toString();
