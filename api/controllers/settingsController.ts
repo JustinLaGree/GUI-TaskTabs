@@ -23,7 +23,7 @@ export class SettingsController {
             }
 
             if (!setting){
-                let settingsJson = SettingsController.defaultSettings;
+                const settingsJson = SettingsController.defaultSettings;
                 settingsJson._id = req.params.userId;
                 const settings = new Settings(settingsJson);
 
