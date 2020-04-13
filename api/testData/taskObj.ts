@@ -6,7 +6,6 @@ export class TaskObj{
     parentId: number;
     title: string;
     description: string;
-    notes: string;
     assignedTo: number;
     deadline: Date;
     status: string;
@@ -17,7 +16,6 @@ export class TaskObj{
         parentIdParam: number,
         titleParam: string,
         descriptionParam: string,
-        notesParam: string,
         assignedToParam: number,
         deadlineParam: Date,
         statusParam: string,
@@ -26,7 +24,6 @@ export class TaskObj{
             this.parentId = parentIdParam;
             this.title = titleParam;
             this.description = descriptionParam;
-            this.notes = notesParam;
             this.assignedTo = assignedToParam;
             this.deadline = deadlineParam;
             this.status = statusParam;

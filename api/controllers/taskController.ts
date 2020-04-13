@@ -1,13 +1,14 @@
 'use strict';
 
 // import mongoose and express
-import express, { json } from "express";
+import express from "express";
 import { Task } from "../models/taskModel"
 import { Counter } from "../models/counterModel"
 import { CounterController, CounterMapping } from "./counterController";
 import { Project } from "../models/projectModel";
 import { ProjectController } from "./projectController";
 import { Error, Document } from "mongoose";
+import { HistoryController } from "./historyController";
 
 // export controller for use in the routes generation
 export class TaskController {
@@ -52,6 +53,8 @@ export class TaskController {
                     if (task){
                         await CounterController.update_a_counter(CounterMapping.taskSequence, { sequenceValue: counter + 1 });
                         req.body._id = counter;
+
+                        await TaskController.create_task_history_on_create(req.body);
                         if (isProject){
                             await ProjectController.create_a_project(req.body, res);
                         }
@@ -67,18 +70,75 @@ export class TaskController {
         });
     }
 
+    private static async create_task_history_on_create(body: any){
+        const history = {
+            taskId: body._id,
+            // TODO: Implement user info from passed in header
+            responsibleUser: "test",
+            timestamp: Date.now(),
+            textBody: `Task #${body._id} ${body.title} was created: \\n
+\\tDescription: ${body.description}\\n
+\\tAssigned To: ${body.assignedTo}\\n
+\\tDeadline: ${body.deadline}\\n
+\\tStatus: ${body.status}\\n`
+        }
+        await HistoryController.create_a_history(history);
+    }
+
+    private static async create_task_history_on_update(oldTask: any, newTask: any){
+        let text: string = `Task #${newTask._id} was edited: \\n`
+
+        if (oldTask.title !== newTask.title){
+            text += `\\tTitle: [${oldTask.title}] => [${newTask.title}]\\n`
+        }
+        if (oldTask.description !== newTask.description){
+            text += `\\tDescription: [${oldTask.description}] => [${newTask.description}]\\n`
+        }
+        if (oldTask.assignedTo !== newTask.assignedTo){
+            text += `\\tAssigned To: [${oldTask.assignedTo}] => [${newTask.assignedTo}]\\n`
+        }
+        if (oldTask.deadline !== newTask.deadline){
+            text += `\\tDeadline: [${oldTask.deadline}] => [${newTask.deadline}]\\n`
+        }
+        if (oldTask.status !== newTask.status){
+            text += `\\tStatus: [${oldTask.status}] => [${newTask.status}]\\n`
+        }
+
+        const history = {
+            taskId: newTask._id,
+            // TODO: Implement user info from passed in header
+            responsibleUser: "test",
+            timestamp: Date.now(),
+            textBody: text
+        }
+        await HistoryController.create_a_history(history);
+    }
+
     // update a specific task in the db by passing an id ... all other info expected in the body
     // uses body of x-www-form-urlencoded type
-    public static update_a_task(req: express.Request, res: express.Response) {
+    public static async update_a_task(req: express.Request, res: express.Response) {
         const update = new Task(req.body);
+        let oldTask: Document;
+        let newTask: Document;
 
-        Task.findByIdAndUpdate(req.params.taskId, update, (err, task) => {
+        await Task.findById(req.params.taskId, (err, task) => {
             if (err){
                 res.send(err);
                 return;
             }
-            res.json(task);
+            oldTask = task;
         });
+
+        await Task.findByIdAndUpdate(req.params.taskId, update, {new: true}, (err, task) => {
+            if (err){
+                res.send(err);
+                return;
+            }
+            newTask = task;
+        });
+
+        await TaskController.create_task_history_on_update(oldTask, newTask);
+        res.json(newTask);
     }
 
     // delete a specific task/project in the db by passing an id
