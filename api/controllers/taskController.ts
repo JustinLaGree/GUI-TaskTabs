@@ -85,11 +85,11 @@ export class TaskController {
     public static async delete_a_task_and_subtasks(req: express.Request, res: express.Response) {
         let subtasks: string[] = [];
 
-        //start with the current task as list of tasks to target
+        // start with the current task as list of tasks to target
         const taskId: string = req.params.taskId;
         subtasks.push(taskId);
 
-        //build a list of subtasks using the current task Id
+        // build a list of subtasks using the current task Id
         const buildSubtaskList = async (currId: string, temp: string[]): Promise<string[]> => {
             let subs: string[] = [];
 
@@ -104,7 +104,7 @@ export class TaskController {
             return temp.concat(subs);
         };
 
-        //iterate over each subtask. delete it and build a list of all subtasks of each task combined
+        // iterate over each subtask. delete it and build a list of all subtasks of each task combined
         const iterateOverSubtasks = async (): Promise<string[]> => {
             let temp: string[] = [];
             for (const currId of subtasks){
@@ -114,13 +114,13 @@ export class TaskController {
             return temp;
         };
 
-        //delete a level of subtasks until there are no subtasks in the db
+        // delete a level of subtasks until there are no subtasks in the db
         do {
             const temp = await iterateOverSubtasks();
             subtasks = temp;
         } while (subtasks.length > 0);
 
-        //successful deletion
+        // successful deletion
         res.json({ message: `Task ${taskId} and all subtasks successfully deleted`});
     }
 
