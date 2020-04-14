@@ -11,4 +11,4 @@ const SettingsSchema: mongoose.Schema = new mongoose.Schema({
 });
 
 // Export this schema for use in other js files.
-export const Settings = mongoose.model("Setting", SettingsSchema);
+export const Settings = mongoose.model("Settings", SettingsSchema, "settings");

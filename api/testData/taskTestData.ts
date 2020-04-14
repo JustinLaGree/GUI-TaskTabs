@@ -8,13 +8,13 @@ import mongoose from "mongoose";
 export class TaskTestData {
 
     // list of inserts to be saved into the db
-    static inserts: TaskObj[] = [
-        new TaskObj("1", null, "Task1T", "Task1D", "Task1N", 1, new Date(), "New", 50),
-        new TaskObj("2", 1, "Task2T", "Task2D", "Task2N", 2, new Date(), "Active", 100),
-        new TaskObj("3", null, "Task3T", "Task3D", "Task3N", 3, new Date(), "Done", 0),
-        new TaskObj("4", 1, "Task4T", "Task4D", "Task4N", 4, new Date(), "New", 0),
-        new TaskObj("5", 4, "Task4T", "Task4D", "Task4N", 4, new Date(), "New", 0),
-        new TaskObj("6", 4, "Task4T", "Task4D", "Task4N", 4, new Date(), "New", 0)
+    public static inserts: TaskObj[] = [
+        new TaskObj("1", null, "Task1T", "Task1D", 1, new Date(), "New", 50),
+        new TaskObj("2", 1, "Task2T", "Task2D", 2, new Date(), "Active", 100),
+        new TaskObj("3", null, "Task3T", "Task3D", 3, new Date(), "Done", 0),
+        new TaskObj("4", 1, "Task4T", "Task4D", 4, new Date(), "New", 0),
+        new TaskObj("5", 4, "Task4T", "Task4D", 4, new Date(), "New", 0),
+        new TaskObj("6", 4, "Task4T", "Task4D", 4, new Date(), "New", 0)
     ];
 
     // clear the tasks table and re-generate test data

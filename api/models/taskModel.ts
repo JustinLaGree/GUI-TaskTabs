@@ -17,10 +17,6 @@ const TaskSchema: mongoose.Schema = new mongoose.Schema({
         type: String,
         maxlength: 5000 // 200 words ~= 1000 chars ... 1000 words ~= 5000 chars
     },
-    notes: {
-        type: String,
-        maxlength: 5000 // 200 words ~= 1000 chars ... 1000 words ~= 5000 chars
-    },
     assignedTo: {
         type: Number
     },

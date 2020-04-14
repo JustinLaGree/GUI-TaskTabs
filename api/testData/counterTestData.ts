@@ -3,13 +3,14 @@
 import { Counter } from "../models/counterModel"
 import { CounterObj } from "./counterObj"
 import mongoose from "mongoose";
+import { TaskTestData } from "./taskTestData";
 
 // class to reconstruct counter table test data
 export class CounterTestData {
 
     // list of inserts to be saved into the db
     static inserts: CounterObj[] = [
-        new CounterObj("1", 5)
+        new CounterObj("1", TaskTestData.inserts.length + 1)
     ];
 
     // clear the counter table and re-generate test data
