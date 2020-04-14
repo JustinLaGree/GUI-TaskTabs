@@ -70,6 +70,7 @@ export class TaskController {
         });
     }
 
+    // create a histroy entry when a task is created
     private static async create_task_history_on_create(body: any){
         const history = {
             taskId: body._id,
@@ -85,6 +86,7 @@ export class TaskController {
         await HistoryController.create_a_history(history);
     }
 
+    // create a history entry when a  task is updated
     private static async create_task_history_on_update(oldTask: any, newTask: any){
         let text: string = `Task #${newTask._id} was edited: \\n`
 
@@ -150,34 +152,34 @@ export class TaskController {
         subtasks.push(taskId);
 
         // build a list of subtasks using the current task Id
-        const buildSubtaskList = async (currId: string, temp: string[]): Promise<string[]> => {
-            let subs: string[] = [];
+        const buildSubtaskList = async (currId: string, subs: string[]): Promise<string[]> => {
 
             await Task.find({"parentId": currId}, (err, tasks) => {
                 if (err){
                     res.send(err);
                     return;
                 }
-                subs = tasks.map(t => t._id);
+                const ids = tasks.map(t => t._id);
+                subs.concat(ids);
             })
 
-            return temp.concat(subs);
+            return subs;
         };
 
         // iterate over each subtask. delete it and build a list of all subtasks of each task combined
         const iterateOverSubtasks = async (): Promise<string[]> => {
-            let temp: string[] = [];
+            let newSubtasks: string[] = [];
+
             for (const currId of subtasks){
                 await TaskController.delete_a_task(currId, res);
-                temp = await buildSubtaskList(currId, temp);
+                newSubtasks = await buildSubtaskList(currId, newSubtasks);
             }
-            return temp;
+            return newSubtasks;
         };
 
         // delete a level of subtasks until there are no subtasks in the db
         do {
-            const temp = await iterateOverSubtasks();
-            subtasks = temp;
+            subtasks = await iterateOverSubtasks();
         } while (subtasks.length > 0);
 
         // successful deletion
