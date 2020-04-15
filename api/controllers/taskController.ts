@@ -69,6 +69,7 @@ export class TaskController extends BasePrivilegeRequiredController{
                         if (task){
                             await CounterController.update_a_counter(CounterMapping.taskSequence, { sequenceValue: counter + 1 });
                             req.body._id = counter;
+                            req.body.projectId = counter;
 
                             await TaskController.create_task_history_on_create(req.body);
                             if (isProject){
