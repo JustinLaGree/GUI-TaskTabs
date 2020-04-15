@@ -13,7 +13,7 @@ export class HistoryController extends BasePrivilegeRequiredController {
     public static async get_a_history(req: express.Request, res: express.Response) {
         const taskId =  req.params.taskId;
 
-        const isPriv = await this.verifyTaskModificationPrivilege(taskId, req);
+        const isPriv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
         if (isPriv) {
             await History.find({ "taskId" : req.params.taskId }, (err, history) => {

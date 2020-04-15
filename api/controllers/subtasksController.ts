@@ -13,7 +13,7 @@ export class SubtasksController extends BasePrivilegeRequiredController{
     public static async list_all_subtasks(req: express.Request, res: express.Response) {
         const taskId = req.params.taskId;
 
-        const priv: boolean = await this.verifyTaskModificationPrivilege(taskId, req);
+        const priv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
         if (priv) {
             Task.find({"parentId": taskId}, (err, tasks) => {

@@ -9,8 +9,7 @@ const TaskSchema: mongoose.Schema = new mongoose.Schema({
         type: Number
     },
     projectId: {
-        type: Number,
-        required: "A projectId must be sepcified"
+        type: Number
     },
     title: {
         type: String,

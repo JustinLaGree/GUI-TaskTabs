@@ -19,14 +19,18 @@ export class ProjectController extends BasePrivilegeRequiredController{
         let projects: string[] = [];
 
         const headers: IncomingHttpHeaders = req.headers;
-        const user = headers.user_email;
+        const user = headers["user-email"];
 
-        await Project.find({ "collaborators": { $contains: user } }, (_, project) => {
+        await Project.find({ "collaborators": user }, (_, project) => {
+            if (project == null || Project.length <= 0){
+                return;
+            }
+
             projectJson = project;
             projects = project.map(a => a._id);
         });
 
-        Task.find({ "_id" : { $in: projects }}, (err, tasks) => {
+        await Task.find({ "_id" : { $in: projects }}, (err, tasks) => {
             if (err){
                 res.send(err);
                 return;
@@ -61,9 +65,9 @@ export class ProjectController extends BasePrivilegeRequiredController{
         const update = req.body;
 
         const headers: IncomingHttpHeaders = req.headers;
-        const owner = headers.user_email;
+        const owner = headers["user-email"];
 
-        const isPriv = await this.verifyProjectModificationPrivilege(projectId, req);
+        const isPriv = await BasePrivilegeRequiredController.verifyProjectModificationPrivilege(projectId, req);
 
         if (isPriv) {
             Project.findOneAndUpdate({ "_id": projectId, "owner": owner}, update, {new: true}, (err, project) => {

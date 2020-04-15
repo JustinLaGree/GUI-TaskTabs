@@ -2,6 +2,7 @@
 
 // import mongoose and express
 import express from "express";
+import { IncomingHttpHeaders } from 'http';
 import { Document, Error } from "mongoose";
 import { Constants } from "../helpers/constants";
 import { Counter } from "../models/counterModel";
@@ -19,7 +20,7 @@ export class TaskController extends BasePrivilegeRequiredController{
     public static get_a_task(req: express.Request, res: express.Response) {
         const taskId = req.params.taskId
 
-        const isPriv = this.verifyTaskModificationPrivilege(taskId, req);
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
         if (isPriv) {
             Task.findById(taskId, (err, task) => {
@@ -51,10 +52,20 @@ export class TaskController extends BasePrivilegeRequiredController{
     // only create a task or create a task and a project in the db
     private static async create_a_task(req: express.Request, res: express.Response, isProject = false) {
         const newTask = new Task(req.body);
-        const taskId = newTask._id;
+        const taskId = newTask.get("parentId");
 
-        const isPriv = this.verifyTaskModificationPrivilege(taskId, req);
+        const headers: IncomingHttpHeaders = req.headers;
+        const username: string = headers["user-name"] as string;
 
+        let isPriv: boolean = false;
+
+        if (isProject){
+            isPriv = true;
+        }
+        else{ 
+            isPriv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
+        }
+        
         if (isPriv) {
             await CounterController.get_a_counter(CounterMapping.taskSequence).then(async value => {
                 const counter: number = new Counter(value).get("sequenceValue");
@@ -71,7 +82,7 @@ export class TaskController extends BasePrivilegeRequiredController{
                             req.body._id = counter;
                             req.body.projectId = counter;
 
-                            await TaskController.create_task_history_on_create(req.body);
+                            await TaskController.create_task_history_on_create(req.body, username);
                             if (isProject){
                                 await ProjectController.create_a_project(req.body);
                             }
@@ -91,11 +102,10 @@ export class TaskController extends BasePrivilegeRequiredController{
     }
 
     // create a histroy entry when a task is created
-    private static async create_task_history_on_create(body: any){
+    private static async create_task_history_on_create(body: any, username: string){
         const history = {
             taskId: body._id,
-            // TODO: Implement user info from passed in header
-            responsibleUser: "test",
+            responsibleUser: username,
             timestamp: Date.now(),
             textBody: `Task #${body._id} ${body.title} was created: \\n
 \\tDescription: ${body.description}\\n
@@ -107,7 +117,7 @@ export class TaskController extends BasePrivilegeRequiredController{
     }
 
     // create a history entry when a  task is updated
-    private static async create_task_history_on_update(oldTask: any, newTask: any){
+    private static async create_task_history_on_update(oldTask: any, newTask: any, username: string){
         let text: string = `Task #${newTask._id} was edited: \\n`
 
         if (oldTask.title !== newTask.title){
@@ -128,8 +138,7 @@ export class TaskController extends BasePrivilegeRequiredController{
 
         const history = {
             taskId: newTask._id,
-            // TODO: Implement user info from passed in header
-            responsibleUser: "test",
+            responsibleUser: username,
             timestamp: Date.now(),
             textBody: text
         }
@@ -143,9 +152,12 @@ export class TaskController extends BasePrivilegeRequiredController{
         let oldTask: Document;
         let newTask: Document;
 
-        const taskId = update._id;
+        const taskId = req.params.taskId;
 
-        const isPriv = this.verifyTaskModificationPrivilege(taskId, req);
+        const headers: IncomingHttpHeaders = req.headers;
+        const username: string = headers["user-name"] as string;
+
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
         if (isPriv){
             // get the desired task
@@ -158,7 +170,7 @@ export class TaskController extends BasePrivilegeRequiredController{
                 oldTask = task;
             });
 
-            await Task.findByIdAndUpdate(req.params.taskId, update, {new: true}, (err, task) => {
+            await Task.findByIdAndUpdate(taskId, update, {new: true}, (err, task) => {
                 if (err){
                     res.send(err);
                     return;
@@ -166,7 +178,7 @@ export class TaskController extends BasePrivilegeRequiredController{
                 newTask = task;
             });
 
-            await TaskController.create_task_history_on_update(oldTask, newTask);
+            await TaskController.create_task_history_on_update(oldTask, newTask, username);
             res.json(newTask);
         } else {
             res.send(Constants.PrivilegeErrorMsg);
@@ -180,7 +192,7 @@ export class TaskController extends BasePrivilegeRequiredController{
         // start with the current task as list of tasks to target
         const taskId: string = req.params.taskId;
 
-        const isPriv = this.verifyTaskModificationPrivilege(taskId, req);
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
         if (isPriv) {
             subtasks.push(taskId);
