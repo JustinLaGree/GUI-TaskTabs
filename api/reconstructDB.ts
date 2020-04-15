@@ -6,6 +6,7 @@ import { ProjectTestData } from "./testData/projectTestData";
 import { CounterTestData } from "./testData/counterTestData";
 import { ApplicationConfig } from "./ApplicationConfig";
 import { HistoryTestData } from "./testData/historyTestData";
+import { SettingsTestData } from "./testData/settingsTestData";
 
 // connect to our local mongo db
 mongoose.Promise = global.Promise;
@@ -27,6 +28,7 @@ const execAsync = async () => {
     await TaskTestData.ConstructTestData();
     await ProjectTestData.ConstructTestData();
     await CounterTestData.ConstructTestData();
+    await SettingsTestData.ConstructTestData();
     await HistoryTestData.ConstructTestData();
 }
 
