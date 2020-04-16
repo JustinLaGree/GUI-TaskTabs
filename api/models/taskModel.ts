@@ -8,6 +8,9 @@ const TaskSchema: mongoose.Schema = new mongoose.Schema({
     parentId: {
         type: Number
     },
+    projectId: {
+        type: Number
+    },
     title: {
         type: String,
         required: "A title must be specified",

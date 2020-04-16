@@ -4,6 +4,7 @@
 export class TaskObj{
     _id: string;
     parentId: number;
+    projectId: number;
     title: string;
     description: string;
     assignedTo: number;
@@ -14,6 +15,7 @@ export class TaskObj{
     // construct a TaskModel base data class for insertion
     constructor(idParam: string,
         parentIdParam: number,
+        projectIdParam: number,
         titleParam: string,
         descriptionParam: string,
         assignedToParam: number,
@@ -22,6 +24,7 @@ export class TaskObj{
         progressParam: number) {
             this._id = idParam;
             this.parentId = parentIdParam;
+            this.projectId = projectIdParam;
             this.title = titleParam;
             this.description = descriptionParam;
             this.assignedTo = assignedToParam;

@@ -2,25 +2,38 @@
 
 // import mongoose and express
 import express from "express";
-import { Task } from "../models/taskModel"
-import { Counter } from "../models/counterModel"
-import { CounterController, CounterMapping } from "./counterController";
+import { IncomingHttpHeaders } from 'http';
+import { Document, Error } from "mongoose";
+import { Constants } from "../helpers/constants";
+import { Counter } from "../models/counterModel";
 import { Project } from "../models/projectModel";
-import { ProjectController } from "./projectController";
-import { Error, Document } from "mongoose";
+import { Task } from "../models/taskModel";
+import { BasePrivilegeRequiredController } from "./basePrivilegeRequiredController";
+import { CounterController, CounterMapping } from "./counterController";
 import { HistoryController } from "./historyController";
+import { ProjectController } from "./projectController";
 
 // export controller for use in the routes generation
-export class TaskController {
+export class TaskController extends BasePrivilegeRequiredController{
 
     // get a specific task in the db by passing an id
     public static get_a_task(req: express.Request, res: express.Response) {
-        Task.findById(req.params.taskId, (err, task) => {
-            if (err){
-                res.send(err);
-            }
-            res.json(task);
-        });
+        const taskId = req.params.taskId
+
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
+
+        if (isPriv) {
+            Task.findById(taskId, (err, task) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+                res.json(task);
+            });
+        }
+        else {
+            res.send(Constants.PrivilegeErrorMsg);
+        }
     }
 
     // create a task without creating a corresponding project in the db
@@ -39,43 +52,60 @@ export class TaskController {
     // only create a task or create a task and a project in the db
     private static async create_a_task(req: express.Request, res: express.Response, isProject = false) {
         const newTask = new Task(req.body);
+        const taskId = newTask.get("parentId");
 
-        await CounterController.get_a_counter(CounterMapping.taskSequence).then(async value => {
-            const counter: number = new Counter(value).get("sequenceValue");
-            newTask._id = counter;
+        const headers: IncomingHttpHeaders = req.headers;
+        const username: string = headers["user-name"] as string;
 
-            try {
-                await newTask.save(async (err, task) => {
-                    if (err){
-                        throw new Error(err);
-                    }
+        let isPriv: boolean = false;
 
-                    if (task){
-                        await CounterController.update_a_counter(CounterMapping.taskSequence, { sequenceValue: counter + 1 });
-                        req.body._id = counter;
+        if (isProject){
+            isPriv = true;
+        }
+        else{ 
+            isPriv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
+        }
+        
+        if (isPriv) {
+            await CounterController.get_a_counter(CounterMapping.taskSequence).then(async value => {
+                const counter: number = new Counter(value).get("sequenceValue");
+                newTask._id = counter;
 
-                        await TaskController.create_task_history_on_create(req.body);
-                        if (isProject){
-                            await ProjectController.create_a_project(req.body, res);
+                try {
+                    await newTask.save(async (err, task) => {
+                        if (err){
+                            throw new Error(err);
                         }
-                    }
 
-                    res.json(req.body);
-                });
-            }
-            catch(err){
-                res.send(err);
-                return;
-            }
-        });
+                        if (task){
+                            await CounterController.update_a_counter(CounterMapping.taskSequence, { sequenceValue: counter + 1 });
+                            req.body._id = counter;
+                            req.body.projectId = counter;
+
+                            await TaskController.create_task_history_on_create(req.body, username);
+                            if (isProject){
+                                await ProjectController.create_a_project(req.body);
+                            }
+                        }
+
+                        res.json(req.body);
+                    });
+                }
+                catch(err){
+                    res.send(err);
+                    return;
+                }
+            });
+        } else {
+            res.send(Constants.PrivilegeErrorMsg);
+        }
     }
 
     // create a histroy entry when a task is created
-    private static async create_task_history_on_create(body: any){
+    private static async create_task_history_on_create(body: any, username: string){
         const history = {
             taskId: body._id,
-            // TODO: Implement user info from passed in header
-            responsibleUser: "test",
+            responsibleUser: username,
             timestamp: Date.now(),
             textBody: `Task #${body._id} ${body.title} was created: \\n
 \\tDescription: ${body.description}\\n
@@ -87,7 +117,7 @@ export class TaskController {
     }
 
     // create a history entry when a  task is updated
-    private static async create_task_history_on_update(oldTask: any, newTask: any){
+    private static async create_task_history_on_update(oldTask: any, newTask: any, username: string){
         let text: string = `Task #${newTask._id} was edited: \\n`
 
         if (oldTask.title !== newTask.title){
@@ -108,8 +138,7 @@ export class TaskController {
 
         const history = {
             taskId: newTask._id,
-            // TODO: Implement user info from passed in header
-            responsibleUser: "test",
+            responsibleUser: username,
             timestamp: Date.now(),
             textBody: text
         }
@@ -123,24 +152,37 @@ export class TaskController {
         let oldTask: Document;
         let newTask: Document;
 
-        await Task.findById(req.params.taskId, (err, task) => {
-            if (err){
-                res.send(err);
-                return;
-            }
-            oldTask = task;
-        });
+        const taskId = req.params.taskId;
 
-        await Task.findByIdAndUpdate(req.params.taskId, update, {new: true}, (err, task) => {
-            if (err){
-                res.send(err);
-                return;
-            }
-            newTask = task;
-        });
+        const headers: IncomingHttpHeaders = req.headers;
+        const username: string = headers["user-name"] as string;
 
-        await TaskController.create_task_history_on_update(oldTask, newTask);
-        res.json(newTask);
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
+
+        if (isPriv){
+            // get the desired task
+            await Task.findById(taskId, (err, task) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+
+                oldTask = task;
+            });
+
+            await Task.findByIdAndUpdate(taskId, update, {new: true}, (err, task) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+                newTask = task;
+            });
+
+            await TaskController.create_task_history_on_update(oldTask, newTask, username);
+            res.json(newTask);
+        } else {
+            res.send(Constants.PrivilegeErrorMsg);
+        }
     }
 
     // delete a specific task/project in the db by passing an id
@@ -149,41 +191,48 @@ export class TaskController {
 
         // start with the current task as list of tasks to target
         const taskId: string = req.params.taskId;
-        subtasks.push(taskId);
 
-        // build a list of subtasks using the current task Id
-        const buildSubtaskList = async (currId: string, subs: string[]): Promise<string[]> => {
+        const isPriv = BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
 
-            await Task.find({"parentId": currId}, (err, tasks) => {
-                if (err){
-                    res.send(err);
-                    return;
+        if (isPriv) {
+            subtasks.push(taskId);
+
+            // build a list of subtasks using the current task Id
+            const buildSubtaskList = async (currId: string, subs: string[]): Promise<string[]> => {
+
+                await Task.find({"parentId": currId}, (err, tasks) => {
+                    if (err){
+                        res.send(err);
+                        return;
+                    }
+                    const ids = tasks.map(t => t._id);
+                    subs.concat(ids);
+                })
+
+                return subs;
+            };
+
+            // iterate over each subtask. delete it and build a list of all subtasks of each task combined
+            const iterateOverSubtasks = async (): Promise<string[]> => {
+                let newSubtasks: string[] = [];
+
+                for (const currId of subtasks){
+                    await TaskController.delete_a_task(currId, res);
+                    newSubtasks = await buildSubtaskList(currId, newSubtasks);
                 }
-                const ids = tasks.map(t => t._id);
-                subs.concat(ids);
-            })
+                return newSubtasks;
+            };
 
-            return subs;
-        };
+            // delete a level of subtasks until there are no subtasks in the db
+            do {
+                subtasks = await iterateOverSubtasks();
+            } while (subtasks.length > 0);
 
-        // iterate over each subtask. delete it and build a list of all subtasks of each task combined
-        const iterateOverSubtasks = async (): Promise<string[]> => {
-            let newSubtasks: string[] = [];
-
-            for (const currId of subtasks){
-                await TaskController.delete_a_task(currId, res);
-                newSubtasks = await buildSubtaskList(currId, newSubtasks);
-            }
-            return newSubtasks;
-        };
-
-        // delete a level of subtasks until there are no subtasks in the db
-        do {
-            subtasks = await iterateOverSubtasks();
-        } while (subtasks.length > 0);
-
-        // successful deletion
-        res.json({ message: `Task ${taskId} and all subtasks successfully deleted`});
+            // successful deletion
+            res.json({ message: `Task ${taskId} and all subtasks successfully deleted`});
+        } else {
+            res.send(Constants.PrivilegeErrorMsg);
+        }
     }
 
     private static async delete_a_task(taskId: string, res: express.Response){
