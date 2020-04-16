@@ -62,10 +62,10 @@ export class TaskController extends BasePrivilegeRequiredController{
         if (isProject){
             isPriv = true;
         }
-        else{ 
+        else{
             isPriv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(taskId, req);
         }
-        
+
         if (isPriv) {
             await CounterController.get_a_counter(CounterMapping.taskSequence).then(async value => {
                 const counter: number = new Counter(value).get("sequenceValue");

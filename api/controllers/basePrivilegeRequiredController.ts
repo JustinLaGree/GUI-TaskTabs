@@ -31,7 +31,7 @@ export class BasePrivilegeRequiredController{
                 throw new Error(err);
             }
 
-            isPriv = (project != null);
+            isPriv = (project != null && project.length > 0);
         });
 
         return isPriv;
@@ -49,7 +49,7 @@ export class BasePrivilegeRequiredController{
                 throw new Error(err);
             }
 
-            isPriv = (project != null);
+            isPriv = (project != null && project.length > 0);
         });
 
         return isPriv;
