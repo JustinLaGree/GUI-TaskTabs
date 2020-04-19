@@ -22,7 +22,7 @@ export class ProjectController extends BasePrivilegeRequiredController{
         const user = headers["user-email"];
 
         await Project.find({ "collaborators": user }, (_, project) => {
-            if (project == null || Project.length <= 0){
+            if (project == null || project.length <= 0){
                 return;
             }
 
@@ -37,9 +37,11 @@ export class ProjectController extends BasePrivilegeRequiredController{
             }
 
             const mergedJson = [];
-            for(const project of projectJson){
-                const task = tasks.filter((el) => el._id === project._id)[0];
-                mergedJson.push(JsonDocumentHelpers.mergeJsonDocuments(task, project));
+            if (projectJson){
+                for(const project of projectJson){
+                    const task = tasks.filter((el) => el._id === project._id)[0];
+                    mergedJson.push(JsonDocumentHelpers.mergeJsonDocuments(task, project));
+                }
             }
 
             res.json(mergedJson);
