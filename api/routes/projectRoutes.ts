@@ -14,5 +14,6 @@ export function routeProjectApis(app: express.Application) {
 
   // project routes that require a project id to query
   app.route('/api/projects/:projectId')
+    .get(ProjectController.get_a_project)
     .put(ProjectController.update_a_project)
 };
