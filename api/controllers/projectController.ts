@@ -40,7 +40,12 @@ export class ProjectController extends BasePrivilegeRequiredController{
             if (projectJson){
                 for(const project of projectJson){
                     const task = tasks.filter((el) => el._id === project._id)[0];
-                    mergedJson.push(JsonDocumentHelpers.mergeJsonDocuments(task, project));
+                    
+                    let merged = JsonDocumentHelpers.mergeJsonDocuments(task, project)
+                    if (merged != null){
+                        mergedJson.push(merged);
+                    }
+                    
                 }
             }
 
