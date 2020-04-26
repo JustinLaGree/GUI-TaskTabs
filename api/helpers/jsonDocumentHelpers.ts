@@ -7,6 +7,10 @@ export class JsonDocumentHelpers{
 
     // merge two json documents together
     public static mergeJsonDocuments(a: Document, b: Document){
+        if (a == null || b == null){
+            return null;
+        }
+
         const aObj = a.toObject();
         const bObj = b.toObject();
 
