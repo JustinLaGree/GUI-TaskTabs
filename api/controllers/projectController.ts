@@ -53,6 +53,26 @@ export class ProjectController extends BasePrivilegeRequiredController{
         });
     }
 
+    // find a particular projects in the db
+    public static async get_a_project(req: express.Request, res: express.Response) {
+        const projectId = req.params.projectId;
+
+        const isPriv = await BasePrivilegeRequiredController.verifyProjectModificationPrivilege(projectId, req);
+
+        if (isPriv) {
+            Project.findById(projectId, (err, project) => {
+                if (err){
+                    res.send(err);
+                    return;
+                }
+
+                res.json(project);
+            });
+        } else {
+            res.send(Constants.PrivilegeErrorMsg);
+        }
+    }
+
     // create a new project in the db
     // uses body of x-www-form-urlencoded type
     public static async create_a_project(body: any) {
