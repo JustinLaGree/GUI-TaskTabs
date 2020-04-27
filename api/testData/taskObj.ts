@@ -7,7 +7,7 @@ export class TaskObj{
     projectId: number;
     title: string;
     description: string;
-    assignedTo: number;
+    assignedTo: string;
     deadline: Date;
     status: string;
     progress: number;
@@ -18,7 +18,7 @@ export class TaskObj{
         projectIdParam: number,
         titleParam: string,
         descriptionParam: string,
-        assignedToParam: number,
+        assignedToParam: string,
         deadlineParam: Date,
         statusParam: string,
         progressParam: number) {
