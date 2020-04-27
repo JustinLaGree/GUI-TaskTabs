@@ -21,7 +21,7 @@ const TaskSchema: mongoose.Schema = new mongoose.Schema({
         maxlength: 5000 // 200 words ~= 1000 chars ... 1000 words ~= 5000 chars
     },
     assignedTo: {
-        type: Number
+        type: String
     },
     deadline: {
         type: Date

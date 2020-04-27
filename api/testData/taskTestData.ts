@@ -9,12 +9,12 @@ export class TaskTestData {
 
     // list of inserts to be saved into the db
     public static inserts: TaskObj[] = [
-        new TaskObj("1", null, 1, "Task1T", "Task1D", 1, new Date(), "New", 50),
-        new TaskObj("2", 1, 1, "Task2T", "Task2D", 2, new Date(), "Active", 100),
-        new TaskObj("3", null, 3, "Task3T", "Task3D", 3, new Date(), "Done", 0),
-        new TaskObj("4", 1, 1, "Task4T", "Task4D", 4, new Date(), "New", 0),
-        new TaskObj("5", 4, 1, "Task4T", "Task4D", 4, new Date(), "New", 0),
-        new TaskObj("6", 4, 1, "Task4T", "Task4D", 4, new Date(), "New", 0)
+        new TaskObj("1", null, 1, "Task1T", "Task1D", null, new Date(), "New", 50),
+        new TaskObj("2", 1, 1, "Task2T", "Task2D", null, new Date(), "Active", 100),
+        new TaskObj("3", null, 3, "Task3T", "Task3D", null, new Date(), "Done", 0),
+        new TaskObj("4", 1, 1, "Task4T", "Task4D", null, new Date(), "New", 0),
+        new TaskObj("5", 4, 1, "Task4T", "Task4D", null, new Date(), "New", 0),
+        new TaskObj("6", 4, 1, "Task4T", "Task4D", null, new Date(), "New", 0)
     ];
 
     // clear the tasks table and re-generate test data
