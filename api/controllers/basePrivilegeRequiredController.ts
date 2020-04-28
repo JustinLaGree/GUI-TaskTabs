@@ -13,7 +13,11 @@ export class BasePrivilegeRequiredController{
         let isPriv: boolean = false;
 
         const headers: IncomingHttpHeaders = req.headers;
-        const user = headers["user-email"].toLowerCase();
+        let user = headers["user-email"];
+
+        if (user){
+            user = user.toLowerCase();
+        }
 
         let projectId;
         // get the desired task
@@ -44,7 +48,11 @@ export class BasePrivilegeRequiredController{
         let isPriv: boolean = false;
 
         const headers: IncomingHttpHeaders = req.headers;
-        const owner = headers["user-email"].toLowerCase();
+        let owner = headers["user-email"];
+
+        if (owner){
+            owner = owner.toLowerCase();
+        }
 
         await Project.find({ "_id": projectId, "owner": owner}, (err, project) => {
             if (err){
