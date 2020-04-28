@@ -22,7 +22,9 @@ export class BasePrivilegeRequiredController{
                 throw new Error(err);
             }
 
-            projectId = task.get("projectId");
+            if (task){
+                projectId = task.get("projectId");
+            }
         });
 
         // see if the current user can view tasks in this project
