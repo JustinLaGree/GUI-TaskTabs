@@ -61,7 +61,7 @@ export class ProjectController extends BasePrivilegeRequiredController{
     public static async get_a_project(req: express.Request, res: express.Response) {
         const projectId = req.params.projectId;
 
-        const isPriv = await BasePrivilegeRequiredController.verifyProjectModificationPrivilege(projectId, req);
+        const isPriv = await BasePrivilegeRequiredController.verifyTaskModificationPrivilege(projectId, req);
 
         if (isPriv) {
             Project.findById(projectId, (err, project) => {
