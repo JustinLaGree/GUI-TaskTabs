@@ -71,6 +71,10 @@ export class TaskController extends BasePrivilegeRequiredController{
                 const counter: number = new Counter(value).get("sequenceValue");
                 newTask._id = counter;
 
+                if (isProject){
+                    newTask.set("projectId", counter);
+                }
+
                 try {
                     await newTask.save(async (err, task) => {
                         if (err){
