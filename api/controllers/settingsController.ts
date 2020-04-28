@@ -18,7 +18,11 @@ export class SettingsController {
     // get a specific task in the db by passing an id
     static get_a_settings(req: express.Request, res: express.Response) {
         const headers: IncomingHttpHeaders = req.headers;
-        const user: string = headers["user-email"] as string;
+        let user: string = headers["user-email"] as string;
+
+        if (user){
+            user = user.toLowerCase();
+        }
 
         const userId = req.params.userId;
 
