@@ -19,7 +19,11 @@ export class ProjectController extends BasePrivilegeRequiredController{
         let projects: string[] = [];
 
         const headers: IncomingHttpHeaders = req.headers;
-        const user = headers["user-email"];
+        let user = headers["user-email"];
+
+        if (user){
+            user = user.toLowerCase();
+        }
 
         await Project.find({ "collaborators": user }, (_, project) => {
             if (project == null || project.length <= 0){
@@ -92,7 +96,11 @@ export class ProjectController extends BasePrivilegeRequiredController{
         const update = req.body;
 
         const headers: IncomingHttpHeaders = req.headers;
-        const owner = headers["user-email"];
+        let owner = headers["user-email"];
+
+        if (owner){
+            owner = owner.toLowerCase();
+        }
 
         const isPriv = await BasePrivilegeRequiredController.verifyProjectModificationPrivilege(projectId, req);
 
